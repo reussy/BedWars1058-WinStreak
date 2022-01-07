@@ -3,6 +3,7 @@ package com.reussy.exodus.bw1058winstreak;
 import com.andrei1058.bedwars.api.BedWars;
 import com.andrei1058.bedwars.api.server.ServerType;
 import com.reussy.exodus.bw1058winstreak.cache.StreakCache;
+import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
 import com.reussy.exodus.bw1058winstreak.commads.StreakAdminCommand;
 import com.reussy.exodus.bw1058winstreak.commads.StreakCommand;
 import com.reussy.exodus.bw1058winstreak.commads.StreakCommandProxy;
@@ -17,6 +18,7 @@ import com.reussy.exodus.bw1058winstreak.placeholder.PlaceholderAPIBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -49,7 +51,11 @@ public class WinStreakPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        //Perform a task for save currently progress in case of any crash or similar
+        for (Player player : Bukkit.getOnlinePlayers()){
+            StreakProperties streakProperties = getStreakCache().get(player.getUniqueId());
+            getDatabaseManager().saveStreakProperties(streakProperties);
+        }
     }
 
     public boolean isBedWars1058Present() {

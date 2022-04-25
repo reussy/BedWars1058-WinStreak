@@ -5,7 +5,6 @@ import com.andrei1058.bedwars.api.language.Messages;
 import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
 import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,7 +30,7 @@ public class StreakCommandProxy implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&cOnly players can use the command!"));
+            Bukkit.getConsoleSender().sendMessage(plugin.getMessageUtils().colorize("&cOnly players can use the command!"));
             return false;
         }
 
@@ -47,11 +46,11 @@ public class StreakCommandProxy implements CommandExecutor {
         StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());
 
         if (args.length > 0 && "-best".equals(args[0])) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.player-best-streak")
-                    .replace("{BEST_STREAK}", String.valueOf(streakProperties.getBestStreak()))));
+            plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.player-best-streak")
+                    .replace("{BEST_STREAK}", String.valueOf(streakProperties.getBestStreak())));
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.player-streak")
-                    .replace("{STREAK}", String.valueOf(streakProperties.getCurrentStreak()))));
+            plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.player-streak")
+                    .replace("{STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
         }
 
         return true;

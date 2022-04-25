@@ -29,9 +29,6 @@ public class SQLite implements DatabaseManager {
             Class.forName("org.sqlite.JDBC");
             DriverManager.getConnection(url);
         } catch (SQLException | ClassNotFoundException e) {
-            if (e instanceof ClassNotFoundException) {
-                e.printStackTrace();
-            }
             e.printStackTrace();
         }
     }

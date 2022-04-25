@@ -1,4 +1,4 @@
-package com.reussy.exodus.bw1058winstreak.placeholder;
+package com.reussy.exodus.bw1058winstreak.integrations;
 
 import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
 import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
@@ -42,21 +42,18 @@ public class PlaceholderAPIBuilder extends PlaceholderExpansion {
      */
     @Override
     public @NotNull String getVersion() {
-        return "1.0";
+        return "1.0.1";
     }
 
     @Override
     public boolean persist() {
-        return true; // This is required or else PlaceholderAPI will unregister the Expansion on reload
+        return true;
     }
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
 
-        if (player == null) {
-
-            return "";
-        }
+        if (player == null) return "";
 
         StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());
 
@@ -64,6 +61,6 @@ public class PlaceholderAPIBuilder extends PlaceholderExpansion {
 
         if (params.equalsIgnoreCase("best_streak")) return String.valueOf(streakProperties.getBestStreak());
 
-        return null;
+        return "";
     }
 }

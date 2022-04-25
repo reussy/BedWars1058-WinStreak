@@ -8,13 +8,13 @@ import com.reussy.exodus.bw1058winstreak.commads.StreakAdminCommand;
 import com.reussy.exodus.bw1058winstreak.commads.StreakCommand;
 import com.reussy.exodus.bw1058winstreak.commads.StreakCommandProxy;
 import com.reussy.exodus.bw1058winstreak.configuration.FilesManager;
-import com.reussy.exodus.bw1058winstreak.database.ConnectionPool;
 import com.reussy.exodus.bw1058winstreak.database.DatabaseManager;
 import com.reussy.exodus.bw1058winstreak.database.MySQL;
 import com.reussy.exodus.bw1058winstreak.database.SQLite;
+import com.reussy.exodus.bw1058winstreak.integrations.PlaceholderAPIBuilder;
 import com.reussy.exodus.bw1058winstreak.listeners.InGameStreakProperties;
 import com.reussy.exodus.bw1058winstreak.listeners.PlayerStreakProperties;
-import com.reussy.exodus.bw1058winstreak.placeholder.PlaceholderAPIBuilder;
+import com.reussy.exodus.bw1058winstreak.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -31,12 +31,13 @@ public class WinStreakPlugin extends JavaPlugin {
     private DatabaseManager databaseManager;
     private FilesManager filesManager;
     private StreakCache streakCache;
+    private MessageUtils messageUtils;
 
     @Override
     public void onEnable() {
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r ----------------------------------------------"));
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &7Enabling &f" + this.pluginName + " v" + this.pluginVersion + " &7.."));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &7Enabling &f" + this.pluginName + " v" + this.pluginVersion + " &7..."));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &7Developed by&f reussy"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &7Running Java &f" + System.getProperty("java.version")));
@@ -47,12 +48,13 @@ public class WinStreakPlugin extends JavaPlugin {
         initDatabase();
         initEvents();
         initCommands();
+        this.messageUtils = new MessageUtils();
     }
 
     @Override
     public void onDisable() {
         //Perform a task for save currently progress in case of any crash or similar
-        for (Player player : Bukkit.getOnlinePlayers()){
+        for (Player player : Bukkit.getOnlinePlayers()) {
             StreakProperties streakProperties = getStreakCache().get(player.getUniqueId());
             getDatabaseManager().saveStreakProperties(streakProperties);
         }
@@ -97,33 +99,16 @@ public class WinStreakPlugin extends JavaPlugin {
     private void initDatabase() {
 
         if (isBedWars1058Present()) {
-
-            if (getBedWarsAPI().getConfigs().getMainConfig().getBoolean("database.enable")) {
-                this.databaseManager = new MySQL(this);
-            } else {
-                this.databaseManager = new SQLite(new ConnectionPool(this));
-            }
+            this.databaseManager = getBedWarsAPI().getConfigs().getMainConfig().getBoolean("database.enable") ? new MySQL(this) : new SQLite(this);
         } else if (isBedWarsProxyPresent()) {
-
             File proxyConfig = new File("plugins/BedWarsProxy/config.yml");
             YamlConfiguration configYaml = YamlConfiguration.loadConfiguration(proxyConfig);
-
-            if (configYaml.getBoolean("database.enable")) {
-                this.databaseManager = new MySQL(this);
-            } else {
-                this.databaseManager = new SQLite(new ConnectionPool(this));
-            }
-
-        } else {
-            Bukkit.getLogger().severe("There is no BedWars plugin installed!");
-            Bukkit.getLogger().severe("Disabling...");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
+            this.databaseManager = configYaml.getBoolean("database.enable") ? new MySQL(this) : new SQLite(this);
         }
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r ----------------------------------------------"));
     }
 
-    public void debugMessage(String message) {
+    public void debug(String message) {
 
         if (getFilesManager().getPluginConfig().getBoolean("general.debug")) {
             Bukkit.getLogger().info("[BW1058-WinStreak DEBUG]: " + message);
@@ -137,10 +122,6 @@ public class WinStreakPlugin extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new InGameStreakProperties(this), this);
         } else if (isBedWarsProxyPresent()) {
             Bukkit.getPluginManager().registerEvents(new PlayerStreakProperties(this), this);
-        } else {
-            Bukkit.getLogger().severe("There is no BedWars plugin installed!");
-            Bukkit.getLogger().severe("Disabling...");
-            Bukkit.getPluginManager().disablePlugin(this);
         }
     }
 
@@ -155,10 +136,6 @@ public class WinStreakPlugin extends JavaPlugin {
         } else if (isBedWarsProxyPresent()) {
             Bukkit.getPluginCommand("ws").setExecutor(new StreakAdminCommand(this));
             Bukkit.getPluginCommand("streak").setExecutor(new StreakCommandProxy(this));
-        } else {
-            Bukkit.getLogger().severe("There is no BedWars plugin installed!");
-            Bukkit.getLogger().severe("Disabling...");
-            Bukkit.getPluginManager().disablePlugin(this);
         }
     }
 
@@ -178,4 +155,7 @@ public class WinStreakPlugin extends JavaPlugin {
         return streakCache;
     }
 
+    public MessageUtils getMessageUtils() {
+        return messageUtils;
+    }
 }

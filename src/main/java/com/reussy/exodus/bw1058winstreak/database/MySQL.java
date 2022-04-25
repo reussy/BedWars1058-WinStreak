@@ -2,33 +2,102 @@ package com.reussy.exodus.bw1058winstreak.database;
 
 import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
 import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.File;
+import java.sql.*;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MySQL implements DatabaseManager {
 
-    private final ConnectionPool connectionPool;
+    private final WinStreakPlugin plugin;
+    private HikariDataSource hikariDataSource;
+    private String host;
+    private String database;
+    private String user;
+    private String pass;
+    private int port;
+    private boolean ssl;
+    private boolean certificateVerification;
+    private int poolSize;
+    private long maxLifetime;
 
     public MySQL(WinStreakPlugin plugin) {
-        this.connectionPool = new ConnectionPool(plugin);
+        this.plugin = plugin;
+        initProperties();
+        initConnection();
+        initializeTable();
+    }
+
+    private void initProperties() {
+        this.host = getBedWarsConfig().getString("database.host");
+        this.database = getBedWarsConfig().getString("database.database");
+        this.user = getBedWarsConfig().getString("database.user");
+        this.pass = getBedWarsConfig().getString("database.pass");
+        this.port = getBedWarsConfig().getInt("database.port");
+        this.ssl = getBedWarsConfig().getBoolean("database.ssl");
+        this.certificateVerification = getBedWarsConfig().getBoolean("database.verify-certificate", true);
+        this.poolSize = getBedWarsConfig().getInt("database.pool-size", 10);
+        this.maxLifetime = getBedWarsConfig().getLong("database.max-lifetime", 1800000);
+    }
+
+    private void initConnection() {
+        HikariConfig hikariConfig = new HikariConfig();
+
+        hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
+        hikariConfig.setPoolName("WinStreak-MySQLPool");
+        hikariConfig.setMaximumPoolSize(poolSize);
+        hikariConfig.setMaxLifetime(maxLifetime);
+        hikariConfig.setUsername(user);
+        hikariConfig.setPassword(pass);
+        hikariConfig.addDataSourceProperty("useSSL", String.valueOf(ssl));
+        if (!certificateVerification) hikariConfig.addDataSourceProperty("verifyServerCertificate", String.valueOf(false));
+        hikariConfig.addDataSourceProperty("characterEncoding", "utf8");
+        hikariConfig.addDataSourceProperty("encoding", "UTF-8");
+        hikariConfig.addDataSourceProperty("useUnicode", "true");
+        hikariConfig.addDataSourceProperty("rewriteBatchedStatements", "true");
+        hikariConfig.addDataSourceProperty("jdbcCompliantTruncation", "false");
+        hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSize", "275");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        hikariConfig.addDataSourceProperty("socketTimeout", String.valueOf(TimeUnit.SECONDS.toMillis(30)));
+
+        try {
+            hikariDataSource = new HikariDataSource(hikariConfig);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void initializeTable() {
+        try (Connection connection = hikariDataSource.getConnection()) {
+            String createTable = "CREATE TABLE IF NOT EXISTS `bw1058_winstreak`" +
+                    " (`uuid` VARCHAR(80) NOT NULL," +
+                    " `current_streak` INT(100)," +
+                    " `best_streak` INT(100));";
+
+            try (Statement statement = connection.createStatement()) {
+                statement.executeUpdate(createTable);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean hasStreakProfile(UUID uuid) {
 
-        String s = "SELECT * FROM `bw1058_winstreak` WHERE (uuid=?)";
-
-        try (Connection connection = connectionPool.getConnection()) {
-
-            try (PreparedStatement preparedStatement = connection.prepareStatement(s)) {
-                preparedStatement.setString(1, uuid.toString());
-
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) return true;
+        String select = "SELECT uuid FROM bw1058_winstreak WHERE uuid = ?;";
+        try (Connection connection = hikariDataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(select)) {
+                statement.setString(1, uuid.toString());
+                try (ResultSet result = statement.executeQuery()) {
+                    return result.next();
                 }
             }
         } catch (SQLException e) {
@@ -40,58 +109,68 @@ public class MySQL implements DatabaseManager {
     @Override
     public StreakProperties initializeStreakProperties(UUID uuid) {
 
-        String s = "SELECT current_streak, best_streak FROM `bw1058_winstreak` WHERE uuid=?";
-
         StreakProperties streakProperties = new StreakProperties(uuid);
+        String select = "SELECT current_streak, best_streak FROM `bw1058_winstreak` WHERE uuid = ?;";
 
-        if (!hasStreakProfile(uuid)) {
-
-            streakProperties.setCurrentStreak(0);
-            streakProperties.setBestStreak(0);
-            return streakProperties;
-        }
-
-        try (Connection connection = connectionPool.getConnection()) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(s)) {
-                preparedStatement.setString(1, uuid.toString());
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) {
-                        streakProperties.setCurrentStreak(resultSet.getInt("current_streak"));
-                        streakProperties.setBestStreak(resultSet.getInt("best_streak"));
+        try (Connection connection = hikariDataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(select)) {
+                statement.setString(1, uuid.toString());
+                try (ResultSet result = statement.executeQuery()) {
+                    if (result.next()) {
+                        streakProperties.setCurrentStreak(result.getInt("current_streak"));
+                        streakProperties.setBestStreak(result.getInt("best_streak"));
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return streakProperties;
     }
 
     @Override
     public void saveStreakProperties(StreakProperties streakProperties) {
 
-        String update = "UPDATE `bw1058_winstreak` SET current_streak=?, best_streak=? WHERE uuid=?";
-        String insert = "INSERT INTO `bw1058_winstreak` (uuid, current_streak, best_streak) VALUES (?,?,?)";
-
-        try (Connection connection = connectionPool.getConnection()) {
+        String s;
+        try (Connection connection = hikariDataSource.getConnection()) {
             if (hasStreakProfile(streakProperties.getUuid())) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(update)) {
-                    preparedStatement.setInt(1, streakProperties.getCurrentStreak());
-                    preparedStatement.setInt(2, streakProperties.getBestStreak());
-                    preparedStatement.setString(3, streakProperties.getUuid().toString());
-                    preparedStatement.executeUpdate();
+                s = "UPDATE `bw1058_winstreak` SET current_streak=?, best_streak=? WHERE uuid=?;";
+                try (PreparedStatement statement = connection.prepareStatement(s)) {
+                    statement.setInt(1, streakProperties.getCurrentStreak());
+                    statement.setInt(2, streakProperties.getBestStreak());
+                    statement.setString(3, streakProperties.getUuid().toString());
+                    statement.executeUpdate();
                 }
             } else {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(insert)) {
-                    preparedStatement.setString(1, streakProperties.getUuid().toString());
-                    preparedStatement.setInt(2, streakProperties.getCurrentStreak());
-                    preparedStatement.setInt(3, streakProperties.getBestStreak());
-                    preparedStatement.executeUpdate();
+                s = "INSERT INTO `bw1058_winstreak` (uuid, current_streak, best_streak) VALUES (?,?,?);";
+                try (PreparedStatement statement = connection.prepareStatement(s)) {
+                    statement.setString(1, streakProperties.getUuid().toString());
+                    statement.setInt(2, streakProperties.getCurrentStreak());
+                    statement.setInt(3, streakProperties.getBestStreak());
+                    statement.executeUpdate();
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private YamlConfiguration getBedWarsConfig() {
+
+        if (plugin.isBedWars1058Present()) {
+
+            return plugin.getBedWarsAPI().getConfigs().getMainConfig().getYml();
+
+        } else if (plugin.isBedWarsProxyPresent()) {
+            File proxyConfig = new File("plugins/BedWarsProxy/config.yml");
+
+            return YamlConfiguration.loadConfiguration(proxyConfig);
+
+        } else {
+            Bukkit.getLogger().severe("There is no BedWars plugin installed!");
+            Bukkit.getLogger().severe("Disabling...");
+            Bukkit.getPluginManager().disablePlugin(plugin);
+        }
+        return plugin.getBedWarsAPI().getConfigs().getMainConfig().getYml();
     }
 }

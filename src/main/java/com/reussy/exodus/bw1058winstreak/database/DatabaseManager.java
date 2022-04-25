@@ -6,6 +6,8 @@ import java.util.UUID;
 
 public interface DatabaseManager {
 
+    void initializeTable();
+
     boolean hasStreakProfile(UUID uuid);
 
     StreakProperties initializeStreakProperties(UUID uuid);

@@ -1,33 +1,67 @@
 package com.reussy.exodus.bw1058winstreak.database;
 
+import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
 import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.File;
+import java.io.IOException;
+import java.sql.*;
 import java.util.UUID;
 
 public class SQLite implements DatabaseManager {
 
-    private final ConnectionPool connectionPool;
+    private final String url;
+    private Connection connection;
 
-    public SQLite(ConnectionPool connectionPool) {
-        this.connectionPool = connectionPool;
+    public SQLite(WinStreakPlugin plugin) {
+        File database = plugin.isBedWars1058Present()
+                ? new File("plugins/BedWars1058/Cache/win_streak.db")
+                : new File("plugins/BedWarsProxy/Cache/win_streak.db");
+        if (!database.exists())
+            try {
+                database.createNewFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        this.url = "jdbc:sqlite:" + database;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            DriverManager.getConnection(url);
+        } catch (SQLException | ClassNotFoundException e) {
+            if (e instanceof ClassNotFoundException) {
+                e.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void initializeTable() {
+        String createTable = "CREATE TABLE IF NOT EXISTS `bw1058_winstreak`" +
+                " (`uuid` VARCHAR(80) NOT NULL," +
+                " `current_streak` INT(100)," +
+                " `best_streak` INT(100));";
+        try {
+            isClosed();
+            try (Statement statement = connection.createStatement()) {
+                statement.executeUpdate(createTable);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean hasStreakProfile(UUID uuid) {
 
-        String s = "SELECT * FROM `bw1058_winstreak` WHERE (uuid=?)";
-
-        try (Connection connection = connectionPool.getConnection()) {
-
-            try (PreparedStatement preparedStatement = connection.prepareStatement(s)) {
-                preparedStatement.setString(1, uuid.toString());
-
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) return true;
+        String select = "SELECT uuid FROM bw1058_winstreak WHERE uuid = ?;";
+        try {
+            isClosed();
+            try (PreparedStatement statement = connection.prepareStatement(select)) {
+                statement.setString(1, uuid.toString());
+                try (ResultSet result = statement.executeQuery()) {
+                    return result.next();
                 }
             }
         } catch (SQLException e) {
@@ -39,9 +73,8 @@ public class SQLite implements DatabaseManager {
     @Override
     public StreakProperties initializeStreakProperties(UUID uuid) {
 
-        String s = "SELECT current_streak, best_streak FROM `bw1058_winstreak` WHERE uuid=?";
-
         StreakProperties streakProperties = new StreakProperties(uuid);
+        String select = "SELECT current_streak, best_streak FROM `bw1058_winstreak` WHERE uuid = ?;";
 
         if (!hasStreakProfile(uuid)) {
 
@@ -50,47 +83,61 @@ public class SQLite implements DatabaseManager {
             return streakProperties;
         }
 
-        try (Connection connection = connectionPool.getConnection()) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(s)) {
-                preparedStatement.setString(1, uuid.toString());
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) {
-                        streakProperties.setCurrentStreak(resultSet.getInt("current_streak"));
-                        streakProperties.setBestStreak(resultSet.getInt("best_streak"));
+        try {
+            isClosed();
+            try (PreparedStatement statement = connection.prepareStatement(select)) {
+                statement.setString(1, uuid.toString());
+                try (ResultSet result = statement.executeQuery()) {
+                    if (result.next()) {
+                        streakProperties.setCurrentStreak(result.getInt("current_streak"));
+                        streakProperties.setBestStreak(result.getInt("best_streak"));
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return streakProperties;
     }
 
     @Override
     public void saveStreakProperties(StreakProperties streakProperties) {
 
-        String update = "UPDATE `bw1058_winstreak` SET current_streak=?, best_streak=? WHERE uuid=?";
-        String insert = "INSERT INTO `bw1058_winstreak` (uuid, current_streak, best_streak) VALUES (?,?,?)";
+        String s;
+        try {
+            isClosed();
 
-        try (Connection connection = connectionPool.getConnection()) {
             if (hasStreakProfile(streakProperties.getUuid())) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(update)) {
-                    preparedStatement.setInt(1, streakProperties.getCurrentStreak());
-                    preparedStatement.setInt(2, streakProperties.getBestStreak());
-                    preparedStatement.setString(3, streakProperties.getUuid().toString());
-                    preparedStatement.executeUpdate();
+                s = "UPDATE `bw1058_winstreak` SET current_streak=?, best_streak=? WHERE uuid=?;";
+                try (PreparedStatement statement = connection.prepareStatement(s)) {
+                    statement.setInt(1, streakProperties.getCurrentStreak());
+                    statement.setInt(2, streakProperties.getBestStreak());
+                    statement.setString(3, streakProperties.getUuid().toString());
+                    statement.executeUpdate();
                 }
             } else {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(insert)) {
-                    preparedStatement.setString(1, streakProperties.getUuid().toString());
-                    preparedStatement.setInt(2, streakProperties.getCurrentStreak());
-                    preparedStatement.setInt(3, streakProperties.getBestStreak());
-                    preparedStatement.executeUpdate();
+                s = "INSERT INTO `bw1058_winstreak` (uuid, current_streak, best_streak) VALUES (?,?,?);";
+                try (PreparedStatement statement = connection.prepareStatement(s)) {
+                    statement.setString(1, streakProperties.getUuid().toString());
+                    statement.setInt(2, streakProperties.getCurrentStreak());
+                    statement.setInt(3, streakProperties.getBestStreak());
+                    statement.executeUpdate();
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void isClosed() throws SQLException {
+        boolean b = false;
+
+        if (connection == null) {
+            b = true;
+        } else if (connection.isClosed()) {
+            b = true;
+        }
+
+        if (b) connection = DriverManager.getConnection(url);
     }
 }

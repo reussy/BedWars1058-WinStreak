@@ -48,8 +48,7 @@ public class FilesManager {
         if (!configFile.exists()) {
             try {
                 configFile.createNewFile();
-            } catch (IOException e) {
-                Bukkit.getLogger().severe("Cannot create config.yml inside /Addons/WinStreak");
+            } catch (IOException ignored) {
             }
         }
     }
@@ -77,10 +76,13 @@ public class FilesManager {
     }
 
     public void reloadPluginConfig() {
-
         configYaml = YamlConfiguration.loadConfiguration(configFile);
     }
 
+    //TO-DO
+    /*
+    * Change to the player language and not BedWars default language.
+     */
     public YamlConfiguration getBedWarsLang() {
 
         if (plugin.isBedWars1058Present()) {
@@ -91,13 +93,10 @@ public class FilesManager {
         } else if (plugin.isBedWarsProxyPresent()) {
 
             File proxyLanguage = new File("plugins/BedWarsProxy/Languages/messages_en.yml");
-
             return YamlConfiguration.loadConfiguration(proxyLanguage);
-
-        } else {
-            Bukkit.getLogger().severe("There is no BedWars plugin installed!");
-            return null;
         }
+
+        return null;
     }
 
     public void addLanguagePaths() {
@@ -110,7 +109,21 @@ public class FilesManager {
 
                 switch (language.getIso()) {
 
-                    default:
+                    /*
+                    * Translated by @reussy
+                     */
+                    case "es":
+                        languageYaml.addDefault("addons.win-streak.player-streak", "&7Tu racha de victorias es {STREAK}");
+                        languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Tu mejor racha de victorias es {BEST_STREAK}");
+                        languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} no está conectado.");
+                        languageYaml.addDefault("addons.win-streak.not-valid-number", "&c{NUMBER} no es un número válido.");
+                        languageYaml.addDefault("addons.win-streak.not-enough-streak", "&c{PLAYER} no tiene suficiente racha. Tiene {WIN_STREAK} racha de victorias");
+                        languageYaml.addDefault("addons.win-streak.successfully-added", "&7Una racha de {AMOUNT} se ha añadido a {PLAYER}. {PLAYER} ahora tiene {WIN_STREAK} racha de victorias.");
+                        languageYaml.addDefault("addons.win-streak.successfully-removed", "&7Una racha de {AMOUNT} se ha removido a {PLAYER}. {PLAYER} ahora tiene {WIN_STREAK} racha de victorias.");
+                        languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} ahora tiene {WIN_STREAK} racha de victorias.");
+                        languageYaml.addDefault("addons.win-streak.successfully-reset", "&7Has reinciado la racha de {PLAYER} a 0");
+
+                    case "en":
                         languageYaml.addDefault("addons.win-streak.player-streak", "&7Your winning streak is {STREAK}");
                         languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Your best winning streak is {BEST_STREAK}");
                         languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} is not online.");
@@ -121,9 +134,17 @@ public class FilesManager {
                         languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} now has {WIN_STREAK} Win Streak");
                         languageYaml.addDefault("addons.win-streak.successfully-reset", "&7You've reset {PLAYER} Win Streak to 0");
 
-                        break;
+                    default:
+                        languageYaml.addDefault("addons.win-streak.player-streak", "&7Your winning streak is {STREAK}");
+                        languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Your best winning streak is {BEST_STREAK}");
+                        languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} is not online.");
+                        languageYaml.addDefault("addons.win-streak.not-valid-number", "&c{NUMBER} not a valid number.");
+                        languageYaml.addDefault("addons.win-streak.not-enough-streak", "&c{PLAYER} not enough streaks. Has {WIN_STREAK} Win Streak");
+                        languageYaml.addDefault("addons.win-streak.successfully-added", "&7{AMOUNT} streaks has been added to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
+                        languageYaml.addDefault("addons.win-streak.successfully-removed", "&7{AMOUNT} streaks has been removed to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
+                        languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} now has {WIN_STREAK} Win Streak");
+                        languageYaml.addDefault("addons.win-streak.successfully-reset", "&7You've reset {PLAYER} Win Streak to 0");
                 }
-
             }
         } else if (plugin.isBedWarsProxyPresent()) {
 
@@ -146,8 +167,6 @@ public class FilesManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            Bukkit.getLogger().severe("There is no BedWars plugin installed!");
         }
     }
 }

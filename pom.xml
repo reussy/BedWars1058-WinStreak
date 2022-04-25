@@ -103,6 +103,13 @@
             <version>22.3.4</version>
             <scope>provided</scope>
         </dependency>
+        <!--BedWarsProxy API -->
+        <dependency>
+            <groupId>com.andrei1058.bedwars</groupId>
+            <artifactId>proxy-api</artifactId>
+            <version>1.2.4</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>

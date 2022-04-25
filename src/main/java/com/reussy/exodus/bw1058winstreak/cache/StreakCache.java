@@ -6,25 +6,29 @@ import java.util.UUID;
 
 public class StreakCache {
 
-    private final Map<UUID, StreakProperties> propertiesMap;
+    private final Map<UUID, StreakProperties> cache;
 
     public StreakCache() {
-        this.propertiesMap = new HashMap<>();
+        this.cache = new HashMap<>();
     }
 
-    public void put(UUID uuid, StreakProperties streakProperties) {
+    public void load(UUID uuid, StreakProperties streakProperties) {
 
-        propertiesMap.put(uuid, streakProperties);
+        if (uuid == null || streakProperties == null) return;
+
+        cache.put(uuid, streakProperties);
     }
 
-    public void remove(UUID uuid) {
+    public void destroy(UUID uuid) {
 
-        propertiesMap.remove(uuid);
+        if (uuid == null) return;
+
+        cache.remove(uuid);
     }
 
     public StreakProperties get(UUID uuid) {
 
-        StreakProperties streakProperties = propertiesMap.get(uuid);
+        StreakProperties streakProperties = cache.get(uuid);
 
         if (streakProperties == null) {
             throw new IllegalStateException("[BW1058-WinStreak DEBUG]: The streak cache for " + uuid.toString() + " is null!");
@@ -33,11 +37,18 @@ public class StreakCache {
         return streakProperties;
     }
 
-    public StreakProperties getMap(UUID uuid) {
-        return propertiesMap.get(uuid);
+    public boolean isInCache(UUID uuid){
+
+        if (uuid == null) return false;
+
+        return getCacheMap().containsKey(uuid);
     }
 
-    public Map<UUID, StreakProperties> getPlayerProfilePropertiesMap() {
-        return this.propertiesMap;
+    public StreakProperties getMap(UUID uuid) {
+        return cache.get(uuid);
+    }
+
+    public Map<UUID, StreakProperties> getCacheMap() {
+        return this.cache;
     }
 }

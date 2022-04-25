@@ -3,10 +3,8 @@ package com.reussy.exodus.bw1058winstreak.listeners;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
-import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
 import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
 import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,11 +14,18 @@ import java.util.UUID;
 public class InGameStreakProperties implements Listener {
 
     private final WinStreakPlugin plugin;
+    //private final int time;
 
     public InGameStreakProperties(WinStreakPlugin plugin) {
         this.plugin = plugin;
+        //this.time = plugin.getBedWarsAPI().getConfigs().getMainConfig().getInt("rejoin-time");
     }
 
+    /*
+    * This event adds to the streak when the player wins the game.
+    * Also increment the best streak if the current streak
+    * is higher than the current streak.
+     */
     @EventHandler
     public void onWin(GameStateChangeEvent e) {
 
@@ -35,12 +40,13 @@ public class InGameStreakProperties implements Listener {
             StreakProperties streakProperties = plugin.getStreakCache().get(playerUUID);
             streakProperties.setCurrentStreak(streakProperties.getCurrentStreak() + 1);
 
-            if (streakProperties.getCurrentStreak() > streakProperties.getBestStreak()) {
-                streakProperties.setBestStreak(streakProperties.getCurrentStreak());
-            }
+            if (streakProperties.getCurrentStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getCurrentStreak());
         });
     }
 
+    /*
+    * This event clears the streak when the player is killed and his bed is broken.
+     */
     @EventHandler
     public void onDeath(PlayerKillEvent e) {
 
@@ -57,15 +63,5 @@ public class InGameStreakProperties implements Listener {
 
         StreakProperties streakProperties = plugin.getStreakCache().get(victimUUID);
         streakProperties.setCurrentStreak(0);
-    }
-
-    @EventHandler
-    public void onLeaveArena(PlayerLeaveArenaEvent e) {
-
-        if (e.getArena().getStatus() == GameState.waiting || e.getArena().getStatus() == GameState.starting) return;
-
-        StreakProperties streakProperties = plugin.getStreakCache().get(e.getPlayer().getUniqueId());
-
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> plugin.getDatabaseManager().saveStreakProperties(streakProperties));
     }
 }

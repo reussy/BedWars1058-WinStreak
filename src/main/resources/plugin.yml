@@ -3,7 +3,7 @@ version: '${project.version}'
 main: com.reussy.exodus.bw1058winstreak.WinStreakPlugin
 softdepend: [ BedWars1058, BedWarsProxy, PlaceholderAPI ]
 authors: [ reussy ]
-description: Wi Streak system for BedWars players!
+description: Win Streak system for BedWars players!
 
 commands:
   ws:

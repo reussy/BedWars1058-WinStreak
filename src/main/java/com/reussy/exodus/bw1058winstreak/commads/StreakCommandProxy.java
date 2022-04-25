@@ -36,11 +36,9 @@ public class StreakCommandProxy implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (plugin.isBedWars1058Present()) {
-            if (plugin.getBedWarsAPI().getArenaUtil().isPlaying(player) || plugin.getBedWarsAPI().getArenaUtil().isSpectating(player)) {
-                player.sendMessage(Language.getMsg(player, Messages.COMMAND_NOT_ALLOWED_IN_GAME));
-                return false;
-            }
+        if (plugin.isBedWars1058Present() && plugin.getBedWarsAPI().getArenaUtil().isPlaying(player) || plugin.getBedWarsAPI().getArenaUtil().isSpectating(player)) {
+            player.sendMessage(Language.getMsg(player, Messages.COMMAND_NOT_ALLOWED_IN_GAME));
+            return false;
         }
 
         StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());

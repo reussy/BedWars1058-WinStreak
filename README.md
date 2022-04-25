@@ -1,4 +1,5 @@
-![Image text](https://i.imgur.com/XPBkZkm.png)
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1e1dc3fdb98c43a796424b2c4ed71e98)](https://www.codacy.com/gh/reussy/BedWars1058-WinStreak/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=reussy/BedWars1058-WinStreak&amp;utm_campaign=Badge_Grade)
 
 ## Information
 

@@ -18,8 +18,8 @@ For **developers**, they can make improvements to the code and submit their pull
 You can still contribute by reporting bugs so they can be fixed.
 
 ## Quick Links
-- [Polymart Page][polymart]
-- [Spigot Page][spigot] **outdated**
+- [Polymart Version][polymart]
+- [Spigot Version][spigot]
 - [Discord][discord]
 
 [polymart]: https://polymart.org/resource/winstreak-bedwars1058-add-on.1871

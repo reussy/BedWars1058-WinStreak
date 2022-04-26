@@ -18,9 +18,9 @@ For **developers**, they can make improvements to the code and submit their pull
 You can still contribute by reporting bugs so they can be fixed.
 
 ## Quick Links
-- [Polymart Version][polymart]
-- [Spigot Version][spigot]
-- [Discord][discord]
+-   [Polymart Version][polymart]
+-   [Spigot Version][spigot]
+-   [Discord][discord]
 
 [polymart]: https://polymart.org/resource/winstreak-bedwars1058-add-on.1871
 [spigot]: https://www.spigotmc.org/resources/bedwars1058-winstreak-addon-sqlite-mysql.97509/

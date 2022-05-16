@@ -31,11 +31,6 @@ public class StreakCommandProxy extends BukkitCommand {
 
         Player player = (Player) sender;
 
-        if (PLUGIN.isBedWars1058Present() && PLUGIN.getBedWarsAPI().getArenaUtil().isPlaying(player) || PLUGIN.getBedWarsAPI().getArenaUtil().isSpectating(player)) {
-            player.sendMessage(Language.getMsg(player, Messages.COMMAND_NOT_ALLOWED_IN_GAME));
-            return false;
-        }
-
         StreakProperties streakProperties = PLUGIN.getStreakCache().get(player.getUniqueId());
 
         if (args.length > 0 && "-best".equals(args[0])) {

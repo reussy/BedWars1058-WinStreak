@@ -10,8 +10,8 @@ import java.util.UUID;
 
 public class SQLite implements DatabaseManager {
 
-    private final String url;
-    private Connection connection;
+    private final String URL;
+    private Connection CONNECTION;
 
     public SQLite(WinStreakPlugin plugin) {
         File database = plugin.isBedWars1058Present()
@@ -24,10 +24,10 @@ public class SQLite implements DatabaseManager {
                 ex.printStackTrace();
             }
 
-        this.url = "jdbc:sqlite:" + database;
+        this.URL = "jdbc:sqlite:" + database;
         try {
             Class.forName("org.sqlite.JDBC");
-            DriverManager.getConnection(url);
+            DriverManager.getConnection(URL);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -41,7 +41,7 @@ public class SQLite implements DatabaseManager {
                 " `best_streak` INT(100));";
         try {
             isClosed();
-            try (Statement statement = connection.createStatement()) {
+            try (Statement statement = CONNECTION.createStatement()) {
                 statement.executeUpdate(createTable);
             }
         } catch (SQLException e) {
@@ -55,7 +55,7 @@ public class SQLite implements DatabaseManager {
         String select = "SELECT uuid FROM bw1058_winstreak WHERE uuid = ?;";
         try {
             isClosed();
-            try (PreparedStatement statement = connection.prepareStatement(select)) {
+            try (PreparedStatement statement = CONNECTION.prepareStatement(select)) {
                 statement.setString(1, uuid.toString());
                 try (ResultSet result = statement.executeQuery()) {
                     return result.next();
@@ -82,7 +82,7 @@ public class SQLite implements DatabaseManager {
 
         try {
             isClosed();
-            try (PreparedStatement statement = connection.prepareStatement(select)) {
+            try (PreparedStatement statement = CONNECTION.prepareStatement(select)) {
                 statement.setString(1, uuid.toString());
                 try (ResultSet result = statement.executeQuery()) {
                     if (result.next()) {
@@ -106,7 +106,7 @@ public class SQLite implements DatabaseManager {
 
             if (hasStreakProfile(streakProperties.getUuid())) {
                 s = "UPDATE `bw1058_winstreak` SET current_streak=?, best_streak=? WHERE uuid=?;";
-                try (PreparedStatement statement = connection.prepareStatement(s)) {
+                try (PreparedStatement statement = CONNECTION.prepareStatement(s)) {
                     statement.setInt(1, streakProperties.getCurrentStreak());
                     statement.setInt(2, streakProperties.getBestStreak());
                     statement.setString(3, streakProperties.getUuid().toString());
@@ -114,7 +114,7 @@ public class SQLite implements DatabaseManager {
                 }
             } else {
                 s = "INSERT INTO `bw1058_winstreak` (uuid, current_streak, best_streak) VALUES (?,?,?);";
-                try (PreparedStatement statement = connection.prepareStatement(s)) {
+                try (PreparedStatement statement = CONNECTION.prepareStatement(s)) {
                     statement.setString(1, streakProperties.getUuid().toString());
                     statement.setInt(2, streakProperties.getCurrentStreak());
                     statement.setInt(3, streakProperties.getBestStreak());
@@ -129,12 +129,12 @@ public class SQLite implements DatabaseManager {
     private void isClosed() throws SQLException {
         boolean b = false;
 
-        if (connection == null) {
+        if (CONNECTION == null) {
             b = true;
-        } else if (connection.isClosed()) {
+        } else if (CONNECTION.isClosed()) {
             b = true;
         }
 
-        if (b) connection = DriverManager.getConnection(url);
+        if (b) CONNECTION = DriverManager.getConnection(URL);
     }
 }

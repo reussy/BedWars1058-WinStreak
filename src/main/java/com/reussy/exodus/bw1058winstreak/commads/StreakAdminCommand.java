@@ -8,44 +8,41 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
-public class StreakAdminCommand implements CommandExecutor {
+public class StreakAdminCommand extends BukkitCommand {
 
-    private final WinStreakPlugin plugin;
+    private final WinStreakPlugin PLUGIN;
 
     public StreakAdminCommand(WinStreakPlugin plugin) {
-        this.plugin = plugin;
+        super("ws");
+        this.PLUGIN = plugin;
     }
 
     /**
-     * Executes the given command, returning its success
+     * Executes the command, returning its success
      *
-     * @param sender  Source of the command
-     * @param command Command which was executed
-     * @param label   Alias of the command which was used
-     * @param args    Passed command arguments
-     * @return true if a valid command, otherwise false
+     * @param sender       Source object which is executing this command
+     * @param commandLabel The alias of the command used
+     * @param args         All arguments passed to the command, split via ' '
+     * @return true if the command was successful, otherwise false
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            Bukkit.getConsoleSender().sendMessage(plugin.getMessageUtils().colorize("&cOnly players can use the command!"));
-            return true;
-        }
+    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
+
+        if (!(sender instanceof Player)) return true;
 
         Player player = (Player) sender;
 
         if (!player.hasPermission("bw.winstreak.admin")) {
-            plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("cmd-not-found")
-                    .replace("{prefix}", plugin.getFilesManager().getBedWarsLang().getString("prefix")));
+            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("cmd-not-found")
+                    .replace("{prefix}", PLUGIN.getFilesManager().getPlayerLanguage(player).getString("prefix")));
             return false;
         }
 
-        if (command.getName().equalsIgnoreCase("ws") && args.length < 2) {
+        if (args.length < 2) {
             sendHelpMessage(player);
             return true;
         }
@@ -53,12 +50,12 @@ public class StreakAdminCommand implements CommandExecutor {
         Player target = Bukkit.getPlayer(args[1]);
 
         if (target == null) {
-            plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.unknown-player")
+            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.unknown-player")
                     .replace("{PLAYER}", args[1]));
             return false;
         }
 
-        StreakProperties streakProperties = plugin.getStreakCache().get(target.getUniqueId());
+        StreakProperties streakProperties = PLUGIN.getStreakCache().get(target.getUniqueId());
         switch (args[0].toLowerCase()) {
 
             case "add":
@@ -69,8 +66,15 @@ public class StreakAdminCommand implements CommandExecutor {
                 }
 
                 try {
+
+                    if (Integer.parseInt(args[2]) < 0){
+                        PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
+                                .replace("{NUMBER}", args[2]));
+                        return true;
+                    }
+
                     streakProperties.setCurrentStreak(streakProperties.getCurrentStreak() + Integer.parseInt(args[2]));
-                    plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.successfully-added")
+                    PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-added")
                             .replace("{PLAYER}", target.getName())
                             .replace("{AMOUNT}", args[2])
                             .replace("{WIN_STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
@@ -79,7 +83,7 @@ public class StreakAdminCommand implements CommandExecutor {
                         streakProperties.setBestStreak(streakProperties.getCurrentStreak());
                     }
                 } catch (NumberFormatException e) {
-                    plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.not-valid-number")
+                    PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
                             .replace("{NUMBER}", args[2]));
                 }
 
@@ -93,20 +97,27 @@ public class StreakAdminCommand implements CommandExecutor {
                 }
 
                 try {
-                    if (streakProperties.getCurrentStreak() <= Integer.parseInt(args[2])) {
-                        plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.not-enough-streak")
+
+                    if (Integer.parseInt(args[2]) < 0){
+                        PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
+                                .replace("{NUMBER}", args[2]));
+                        return true;
+                    }
+
+                    if (streakProperties.getCurrentStreak() < Integer.parseInt(args[2]) && Integer.parseInt(args[2]) != 0) {
+                        PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-enough-streak")
                                 .replace("{PLAYER}", target.getName())
                                 .replace("{WIN_STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
 
                         return false;
                     }
                     streakProperties.setCurrentStreak(streakProperties.getCurrentStreak() - Integer.parseInt(args[2]));
-                    plugin.getMessageUtils().send(player,plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.successfully-removed")
+                    PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-removed")
                             .replace("{PLAYER}", target.getName())
                             .replace("{AMOUNT}", args[2])
                             .replace("{WIN_STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
                 } catch (NumberFormatException e) {
-                    plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.not-valid-number")
+                    PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
                             .replace("{NUMBER}", args[2]));
                 }
                 return true;
@@ -119,14 +130,21 @@ public class StreakAdminCommand implements CommandExecutor {
                 }
 
                 try {
+
+                    if (Integer.parseInt(args[2]) < 0){
+                        PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
+                                .replace("{NUMBER}", args[2]));
+                        return true;
+                    }
+
                     streakProperties.setCurrentStreak(Integer.parseInt(args[2]));
-                    plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.successfully-set")
+                    PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-set")
                             .replace("{PLAYER}", target.getName())
                             .replace("{WIN_STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
 
                     if (streakProperties.getCurrentStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getCurrentStreak());
                 } catch (NumberFormatException e) {
-                    plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.not-valid-number")
+                    PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
                             .replace("{NUMBER}", args[2]));
                 }
 
@@ -135,7 +153,7 @@ public class StreakAdminCommand implements CommandExecutor {
             case "reset":
 
                 streakProperties.setCurrentStreak(0);
-                plugin.getMessageUtils().send(player, plugin.getFilesManager().getBedWarsLang().getString("addons.win-streak.successfully-reset")
+                PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-reset")
                         .replace("{PLAYER}", target.getName()));
                 return true;
 
@@ -153,11 +171,12 @@ public class StreakAdminCommand implements CommandExecutor {
     }
 
     private void sendHelpMessage(Player player){
-        plugin.getMessageUtils().send(player, "&8&lþ &6BedWars1058 Win Streak v" + plugin.getDescription().getVersion() + " &7- &cAdmin Commands");
+        PLUGIN.getMessageUtils().send(player, "&8&lþ &6BedWars1058 Win Streak v" + PLUGIN.getDescription().getVersion() + " &7- &cAdmin Commands");
         player.sendMessage(" ");
         player.spigot().sendMessage(textComponentBuilder(" &6▪ &7/ws add <player> <amount> &8- &eAdd more streak to a player", "/ws add", "Add more streak to a player"));
         player.spigot().sendMessage(textComponentBuilder(" &6▪ &7/ws remove <player> <amount> &8- &eRemove streak to a player", "/ws remove", "Remove streak to a player"));
         player.spigot().sendMessage(textComponentBuilder(" &6▪ &7/ws set <player> <amount> &8- &eSet streak to a player", "/ws set", "Set streak to a player"));
         player.spigot().sendMessage(textComponentBuilder(" &6▪ &7/ws reset <player> &8- &eReset streak to a player", "/ws reset", "Reset streak to a player"));
     }
+
 }

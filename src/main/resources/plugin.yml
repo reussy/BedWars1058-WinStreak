@@ -1,12 +1,6 @@
-name: BedWars1058WinStreak
+name: BedWars1058-WinStreak
 version: '${project.version}'
 main: com.reussy.exodus.bw1058winstreak.WinStreakPlugin
 softdepend: [ BedWars1058, BedWarsProxy, PlaceholderAPI ]
 authors: [ reussy ]
 description: Win Streak system for BedWars players!
-
-commands:
-  ws:
-    description: Admin Commands for WinSteakPlugin
-  streak:
-    description: User Command for BUNGEE mode

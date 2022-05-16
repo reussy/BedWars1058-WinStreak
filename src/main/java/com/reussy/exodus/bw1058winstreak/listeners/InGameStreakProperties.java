@@ -13,12 +13,12 @@ import java.util.UUID;
 
 public class InGameStreakProperties implements Listener {
 
-    private final WinStreakPlugin plugin;
+    private final WinStreakPlugin PLUGIN;
     //private final int time;
 
     public InGameStreakProperties(WinStreakPlugin plugin) {
-        this.plugin = plugin;
-        //this.time = plugin.getBedWarsAPI().getConfigs().getMainConfig().getInt("rejoin-time");
+        this.PLUGIN = plugin;
+        //this.time = PLUGIN.getBedWarsAPI().getConfigs().getMainConfig().getInt("rejoin-time");
     }
 
     /*
@@ -35,9 +35,9 @@ public class InGameStreakProperties implements Listener {
 
             UUID playerUUID = player.getUniqueId();
 
-            if (plugin.getBedWarsAPI().getArenaUtil().isSpectating(player)) return;
+            if (PLUGIN.getBedWarsAPI().getArenaUtil().isSpectating(player)) return;
 
-            StreakProperties streakProperties = plugin.getStreakCache().get(playerUUID);
+            StreakProperties streakProperties = PLUGIN.getStreakCache().get(playerUUID);
             streakProperties.setCurrentStreak(streakProperties.getCurrentStreak() + 1);
 
             if (streakProperties.getCurrentStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getCurrentStreak());
@@ -54,14 +54,14 @@ public class InGameStreakProperties implements Listener {
 
         if (e.getArena().getStatus() != GameState.playing) return;
 
-        if (!plugin.getBedWarsAPI().getArenaUtil().isPlaying(victim)
-                || plugin.getBedWarsAPI().getArenaUtil().isSpectating(victim)) return;
+        if (!PLUGIN.getBedWarsAPI().getArenaUtil().isPlaying(victim)
+                || PLUGIN.getBedWarsAPI().getArenaUtil().isSpectating(victim)) return;
 
         if (victim == null || !e.getCause().isFinalKill()) return;
 
         UUID victimUUID = victim.getUniqueId();
 
-        StreakProperties streakProperties = plugin.getStreakCache().get(victimUUID);
+        StreakProperties streakProperties = PLUGIN.getStreakCache().get(victimUUID);
         streakProperties.setCurrentStreak(0);
     }
 }

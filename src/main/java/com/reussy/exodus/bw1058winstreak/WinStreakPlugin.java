@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 public class WinStreakPlugin extends JavaPlugin {
@@ -50,7 +51,11 @@ public class WinStreakPlugin extends JavaPlugin {
         initDatabase();
         initEvents();
         initCommands();
-        this.FILES_MANAGER = new FilesManager(this);
+        try {
+            this.FILES_MANAGER = new FilesManager(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.STREAK_CACHE = new StreakCache();
         this.MESSAGE_UTILS = new MessageUtils();
 

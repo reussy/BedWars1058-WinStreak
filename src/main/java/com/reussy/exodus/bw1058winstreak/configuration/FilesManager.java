@@ -16,7 +16,7 @@ public class FilesManager {
     File CONFIG_FILE;
     YamlConfiguration CONFIG_YAML;
 
-    public FilesManager(WinStreakPlugin plugin) {
+    public FilesManager(WinStreakPlugin plugin) throws IOException {
         this.plugin = plugin;
 
         if (plugin.isBedWars1058Present()) {
@@ -99,15 +99,12 @@ public class FilesManager {
 
         if (plugin.isBedWars1058Present()) {
             return plugin.getBedWarsAPI().getPlayerLanguage(player).getYml();
-        } else if (plugin.isBedWarsProxyPresent()) {
-            //File language = new File("plugins/BedWarsProxy/Languages/messages_" + plugin.getBedWarsProxy().getLanguageUtil().getPlayerLanguage(player).getIso() + ".yml");
-            return null;
-        } else {
-            return getBedWarsLang();
         }
+
+        return getBedWarsLang();
     }
 
-    public void addLanguagePaths() {
+    public void addLanguagePaths() throws IOException {
 
         if (plugin.isBedWars1058Present()) {
 
@@ -120,16 +117,24 @@ public class FilesManager {
                 YamlConfiguration languageYaml = language.getYml();
 
                 translate(languageYaml, language.getIso());
+                language.save();
             }
         } else if (plugin.isBedWarsProxyPresent()) {
 
-            File[] languages = new File("plugins/BedWarsProxy/Languages/").listFiles(File::isFile);
+            File proxyLanguage = new File("plugins/BedWarsProxy/Languages/messages_en.yml");
+            YamlConfiguration languageYaml = YamlConfiguration.loadConfiguration(proxyLanguage);
 
-            assert languages != null;
-            for (File language : languages){
-
-                Bukkit.getConsoleSender().sendMessage(" " + language.getName());
-            }
+            languageYaml.addDefault("addons.win-streak.player-streak", "&7Your winning streak is {STREAK}");
+            languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Your best winning streak is {BEST_STREAK}");
+            languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} is not online.");
+            languageYaml.addDefault("addons.win-streak.not-valid-number", "&c{NUMBER} not a valid number.");
+            languageYaml.addDefault("addons.win-streak.not-enough-streak", "&c{PLAYER} not enough streaks. Has {WIN_STREAK} Win Streak");
+            languageYaml.addDefault("addons.win-streak.successfully-added", "&7{AMOUNT} streaks has been added to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
+            languageYaml.addDefault("addons.win-streak.successfully-removed", "&7{AMOUNT} streaks has been removed to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
+            languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} now has {WIN_STREAK} Win Streak");
+            languageYaml.addDefault("addons.win-streak.successfully-reset", "&7You've reset {PLAYER} Win Streak to 0");
+            languageYaml.options().copyDefaults(true);
+            languageYaml.save(proxyLanguage);
 
             /*
             for (com.andrei1058.bedwars.proxy.api.Language language : plugin.getBedWarsProxy().getLanguageUtil().getLanguages()){
@@ -186,5 +191,6 @@ public class FilesManager {
                 languageYaml.addDefault("addons.win-streak.successfully-reset", "&7You've reset {PLAYER} Win Streak to 0");
                 break;
         }
+        languageYaml.options().copyDefaults(true);
     }
 }

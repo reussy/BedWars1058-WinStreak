@@ -34,10 +34,10 @@ public class StreakCommandProxy extends BukkitCommand {
         StreakProperties streakProperties = PLUGIN.getStreakCache().get(player.getUniqueId());
 
         if (args.length > 0 && "-best".equals(args[0])) {
-            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getBedWarsLang().getString("addons.win-streak.player-best-streak")
+            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
                     .replace("{BEST_STREAK}", String.valueOf(streakProperties.getBestStreak())));
         } else {
-            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getBedWarsLang().getString("addons.win-streak.player-streak")
+            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
                     .replace("{STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
         }
 

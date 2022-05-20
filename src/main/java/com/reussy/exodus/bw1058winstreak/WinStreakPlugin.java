@@ -33,6 +33,7 @@ public class WinStreakPlugin extends JavaPlugin {
     String PLUGIN_VERSION = getDescription().getVersion();
     int BSTATS_ID = 15063;
     private BedWars BEDWARS;
+    private com.andrei1058.bedwars.proxy.api.BedWars BEDWARS_PROXY;
     private DatabaseManager DATABASE_MANAGER;
     private FilesManager FILES_MANAGER;
     private StreakCache STREAK_CACHE;
@@ -87,7 +88,7 @@ public class WinStreakPlugin extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &fBedWars1058 &7found and hooked successfully."));
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
         } else if (isBedWarsProxyPresent()) {
-            //this.bedWarsProxy = Bukkit.getServicesManager().getRegistration(com.andrei1058.bedwars.proxy.api.BedWars.class).getProvider();
+            this.BEDWARS_PROXY = Bukkit.getServicesManager().getRegistration(com.andrei1058.bedwars.proxy.api.BedWars.class).getProvider();
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &fBedWarsProxy &7found and hooked successfully."));
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
@@ -161,6 +162,10 @@ public class WinStreakPlugin extends JavaPlugin {
 
     public BedWars getBedWarsAPI() {
         return BEDWARS;
+    }
+
+    public com.andrei1058.bedwars.proxy.api.BedWars getBedWarsProxyAPI(){
+        return BEDWARS_PROXY;
     }
 
     public DatabaseManager getDatabaseManager() {

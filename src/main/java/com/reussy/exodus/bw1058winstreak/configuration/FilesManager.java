@@ -132,8 +132,11 @@ public class FilesManager {
                         languageYaml.addDefault("addons.win-streak.successfully-reset", "&7Has reinciado la racha de {PLAYER} a 0");
                     }
 
-                    case "en" -> {
-                        languageYaml.addDefault("addons.win-streak.player-streak", "&7Your winning streak is {STREAK}");
+                    /*
+                     * Translated by @𝓧𝔁_𝔂𝓾𝓻𝓲2005_𝔁𝓧
+                     */
+                    case "it" -> {
+                        languageYaml.addDefault("addons.win-streak.player-streak", "&7La tua striscia vincente è {STREAK}");
                         languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Your best winning streak is {BEST_STREAK}");
                         languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} is not online.");
                         languageYaml.addDefault("addons.win-streak.not-valid-number", "&c{NUMBER} not a valid number.");
@@ -144,11 +147,8 @@ public class FilesManager {
                         languageYaml.addDefault("addons.win-streak.successfully-reset", "&7You've reset {PLAYER} Win Streak to 0");
                     }
 
-                    /*
-                     * Translated by @𝓧𝔁_𝔂𝓾𝓻𝓲2005_𝔁𝓧
-                     */
-                    case "it" -> {
-                        languageYaml.addDefault("addons.win-streak.player-streak", "&7La tua striscia vincente è {STREAK}");
+                    default -> {
+                        languageYaml.addDefault("addons.win-streak.player-streak", "&7Your winning streak is {STREAK}");
                         languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Your best winning streak is {BEST_STREAK}");
                         languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} is not online.");
                         languageYaml.addDefault("addons.win-streak.not-valid-number", "&c{NUMBER} not a valid number.");
@@ -186,19 +186,6 @@ public class FilesManager {
                         languageYaml.options().copyDefaults(true);
                     }
 
-                    case "en" -> {
-                        languageYaml.addDefault("addons.win-streak.player-streak", "&7Your winning streak is {STREAK}");
-                        languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Your best winning streak is {BEST_STREAK}");
-                        languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} is not online.");
-                        languageYaml.addDefault("addons.win-streak.not-valid-number", "&c{NUMBER} not a valid number.");
-                        languageYaml.addDefault("addons.win-streak.not-enough-streak", "&c{PLAYER} not enough streaks. Has {WIN_STREAK} Win Streak");
-                        languageYaml.addDefault("addons.win-streak.successfully-added", "&7{AMOUNT} streaks has been added to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
-                        languageYaml.addDefault("addons.win-streak.successfully-removed", "&7{AMOUNT} streaks has been removed to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
-                        languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} now has {WIN_STREAK} Win Streak");
-                        languageYaml.addDefault("addons.win-streak.successfully-reset", "&7You've reset {PLAYER} Win Streak to 0");
-                        languageYaml.options().copyDefaults(true);
-                    }
-
                     /*
                      * Translated by @𝓧𝔁_𝔂𝓾𝓻𝓲2005_𝔁𝓧
                      */
@@ -212,6 +199,19 @@ public class FilesManager {
                         languageYaml.addDefault("addons.win-streak.successfully-removed", "&7{AMOUNT} serie di vittorie e stata rimossa a {PLAYER}. {PLAYER} ha una serie di vittorie di {WIN_STREAK}");
                         languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} ora ha {WIN_STREAK} di serie di vittorie");
                         languageYaml.addDefault("addons.win-streak.successfully-reset", "&7hai ripristinato la serie di vittorie di {PLAYER} a 0");
+                        languageYaml.options().copyDefaults(true);
+                    }
+
+                    default ->{
+                        languageYaml.addDefault("addons.win-streak.player-streak", "&7Your winning streak is {STREAK}");
+                        languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Your best winning streak is {BEST_STREAK}");
+                        languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} is not online.");
+                        languageYaml.addDefault("addons.win-streak.not-valid-number", "&c{NUMBER} not a valid number.");
+                        languageYaml.addDefault("addons.win-streak.not-enough-streak", "&c{PLAYER} not enough streaks. Has {WIN_STREAK} Win Streak");
+                        languageYaml.addDefault("addons.win-streak.successfully-added", "&7{AMOUNT} streaks has been added to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
+                        languageYaml.addDefault("addons.win-streak.successfully-removed", "&7{AMOUNT} streaks has been removed to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
+                        languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} now has {WIN_STREAK} Win Streak");
+                        languageYaml.addDefault("addons.win-streak.successfully-reset", "&7You've reset {PLAYER} Win Streak to 0");
                         languageYaml.options().copyDefaults(true);
                     }
 

@@ -16,9 +16,13 @@ public class MySQL implements DatabaseManager {
 
     private final WinStreakPlugin PLUGIN;
     private HikariDataSource HIKARI_DATASOURCE;
-    private String HOST, DATABASE, USERNAME, PASSWORD;
+    private String HOST;
+    private String DATABASE;
+    private String USERNAME;
+    private String PASSWORD;
     private int PORT;
-    private boolean SSL, CERTIFICATE_VERIFICATION;
+    private boolean SSL;
+    private boolean CERTIFICATE_VERIFICATION;
     private int POOL_SIZE;
     private long MAX_LIFE_TIME;
 

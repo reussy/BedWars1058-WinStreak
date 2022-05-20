@@ -24,7 +24,7 @@ public class InGameStreakProperties implements Listener {
     /*
     * This event adds to the streak when the player wins the game.
     * Also increment the best streak if the current streak
-    * is higher than the current streak.
+    * is higher than the best streak.
      */
     @EventHandler
     public void onWin(GameStateChangeEvent e) {
@@ -54,8 +54,7 @@ public class InGameStreakProperties implements Listener {
 
         if (e.getArena().getStatus() != GameState.playing) return;
 
-        if (!PLUGIN.getBedWarsAPI().getArenaUtil().isPlaying(victim)
-                || PLUGIN.getBedWarsAPI().getArenaUtil().isSpectating(victim)) return;
+        if (!PLUGIN.getBedWarsAPI().getArenaUtil().isPlaying(victim)) return;
 
         if (victim == null || !e.getCause().isFinalKill()) return;
 

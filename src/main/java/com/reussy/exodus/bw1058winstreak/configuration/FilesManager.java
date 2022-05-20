@@ -3,7 +3,6 @@ package com.reussy.exodus.bw1058winstreak.configuration;
 import com.andrei1058.bedwars.api.language.Language;
 import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -12,12 +11,12 @@ import java.io.IOException;
 
 public class FilesManager {
 
-    private final WinStreakPlugin plugin;
+    private final WinStreakPlugin PLUGIN;
     File CONFIG_FILE;
     YamlConfiguration CONFIG_YAML;
 
     public FilesManager(WinStreakPlugin plugin) throws IOException {
-        this.plugin = plugin;
+        this.PLUGIN = plugin;
 
         if (plugin.isBedWars1058Present()) {
             CONFIG_FILE = new File("plugins/BedWars1058/Addons/WinStreak/config.yml");
@@ -36,10 +35,6 @@ public class FilesManager {
             addConfigPaths();
             addLanguagePaths();
 
-        } else {
-            Bukkit.getLogger().severe("There is no BedWars plugin installed!");
-            Bukkit.getLogger().severe("Disabling...");
-            Bukkit.getPluginManager().disablePlugin(plugin);
         }
     }
 
@@ -85,10 +80,10 @@ public class FilesManager {
      */
     public YamlConfiguration getBedWarsLang() {
 
-        if (plugin.isBedWars1058Present()) {
-            String iso = plugin.getBedWarsAPI().getConfigs().getMainConfig().getString("language");
-            return plugin.getBedWarsAPI().getLanguageByIso(iso).getYml();
-        } else if (plugin.isBedWarsProxyPresent()) {
+        if (PLUGIN.isBedWars1058Present()) {
+            String iso = PLUGIN.getBedWarsAPI().getConfigs().getMainConfig().getString("language");
+            return PLUGIN.getBedWarsAPI().getLanguageByIso(iso).getYml();
+        } else if (PLUGIN.isBedWarsProxyPresent()) {
             File proxyLanguage = new File("plugins/BedWarsProxy/Languages/messages_en.yml");
             return YamlConfiguration.loadConfiguration(proxyLanguage);
         }
@@ -97,8 +92,8 @@ public class FilesManager {
 
     public YamlConfiguration getPlayerLanguage(Player player){
 
-        if (plugin.isBedWars1058Present()) {
-            return plugin.getBedWarsAPI().getPlayerLanguage(player).getYml();
+        if (PLUGIN.isBedWars1058Present()) {
+            return PLUGIN.getBedWarsAPI().getPlayerLanguage(player).getYml();
         }
 
         return getBedWarsLang();
@@ -106,7 +101,7 @@ public class FilesManager {
 
     public void addLanguagePaths() throws IOException {
 
-        if (plugin.isBedWars1058Present()) {
+        if (PLUGIN.isBedWars1058Present()) {
 
             //TO-DO
             /*
@@ -119,7 +114,7 @@ public class FilesManager {
                 translate(languageYaml, language.getIso());
                 language.save();
             }
-        } else if (plugin.isBedWarsProxyPresent()) {
+        } else if (PLUGIN.isBedWarsProxyPresent()) {
 
             File proxyLanguage = new File("plugins/BedWarsProxy/Languages/messages_en.yml");
             YamlConfiguration languageYaml = YamlConfiguration.loadConfiguration(proxyLanguage);
@@ -137,7 +132,7 @@ public class FilesManager {
             languageYaml.save(proxyLanguage);
 
             /*
-            for (com.andrei1058.bedwars.proxy.api.Language language : plugin.getBedWarsProxy().getLanguageUtil().getLanguages()){
+            for (com.andrei1058.bedwars.proxy.api.Language language : PLUGIN.getBedWarsProxy().getLanguageUtil().getLanguages()){
 
                 File proxyLanguage = new File("plugins/BedWarsProxy/Languages/messages_" + language.getIso() + ".yml");
                 YamlConfiguration languageYaml = YamlConfiguration.loadConfiguration(proxyLanguage);

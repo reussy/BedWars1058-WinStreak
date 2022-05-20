@@ -4,31 +4,31 @@ import java.util.UUID;
 
 public class StreakProperties {
 
-    private final UUID uuid;
-    private int currentStreak;
-    private int bestStreak;
+    private final UUID UUID;
+    private int CURRENT_STREAK;
+    private int BEST_STREAK;
 
     public StreakProperties(UUID uuid) {
-        this.uuid = uuid;
+        this.UUID = uuid;
     }
 
     public UUID getUuid() {
-        return uuid;
+        return UUID;
     }
 
     public int getCurrentStreak() {
-        return currentStreak;
+        return CURRENT_STREAK;
     }
 
     public void setCurrentStreak(int currentStreak) {
-        this.currentStreak = currentStreak;
+        this.CURRENT_STREAK = currentStreak;
     }
 
     public int getBestStreak() {
-        return bestStreak;
+        return BEST_STREAK;
     }
 
     public void setBestStreak(int bestStreak) {
-        this.bestStreak = bestStreak;
+        this.BEST_STREAK = bestStreak;
     }
 }

@@ -39,10 +39,6 @@
                             <pattern>org.slf4j</pattern>
                             <shadedPattern>com.reussy.exodus.bw1058winstreak.libs.slf4j</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>com.reussy.exodus.bw1058winstreak.libs.bstats</shadedPattern>
-                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -135,12 +131,6 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.32</version>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

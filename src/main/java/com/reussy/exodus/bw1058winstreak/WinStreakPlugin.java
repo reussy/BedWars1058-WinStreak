@@ -15,7 +15,6 @@ import com.reussy.exodus.bw1058winstreak.integrations.PlaceholderAPIBuilder;
 import com.reussy.exodus.bw1058winstreak.listeners.InGameStreakProperties;
 import com.reussy.exodus.bw1058winstreak.listeners.PlayerStreakProperties;
 import com.reussy.exodus.bw1058winstreak.utils.MessageUtils;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandMap;
@@ -31,7 +30,6 @@ public class WinStreakPlugin extends JavaPlugin {
 
     String PLUGIN_NAME = "BedWars1058-WinStreak";
     String PLUGIN_VERSION = getDescription().getVersion();
-    int BSTATS_ID = 15063;
     private BedWars BEDWARS;
     private com.andrei1058.bedwars.proxy.api.BedWars BEDWARS_PROXY;
     private DatabaseManager DATABASE_MANAGER;
@@ -59,8 +57,6 @@ public class WinStreakPlugin extends JavaPlugin {
         }
         this.STREAK_CACHE = new StreakCache();
         this.MESSAGE_UTILS = new MessageUtils();
-
-        Metrics metrics = new Metrics(this, BSTATS_ID);
     }
 
     @Override

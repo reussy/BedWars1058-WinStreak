@@ -50,7 +50,7 @@ public class StreakCommand extends SubCommand {
                     .replace("{BEST_STREAK}", String.valueOf(streakProperties.getBestStreak())));
         } else {
             PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
-                    .replace("{STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
+                    .replace("{STREAK}", String.valueOf(streakProperties.getStreak())));
         }
 
         return true;

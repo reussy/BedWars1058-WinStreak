@@ -57,9 +57,9 @@ public class PlaceholderAPIBuilder extends PlaceholderExpansion {
 
         StreakProperties streakProperties = PLUGIN.getStreakCache().get(player.getUniqueId());
 
-        if (streakProperties.getUuid() == null) return "";
+        if (streakProperties.getUUID() == null) return "";
 
-        if (params.equalsIgnoreCase("streak")) return String.valueOf(streakProperties.getCurrentStreak());
+        if (params.equalsIgnoreCase("streak")) return String.valueOf(streakProperties.getStreak());
 
         if (params.equalsIgnoreCase("best_streak")) return String.valueOf(streakProperties.getBestStreak());
 

@@ -1,5 +1,6 @@
 package com.reussy.exodus.bw1058winstreak;
 
+import club.mher.privategames.api.PrivateGames;
 import com.andrei1058.bedwars.api.BedWars;
 import com.andrei1058.bedwars.api.server.ServerType;
 import com.reussy.exodus.bw1058winstreak.cache.StreakCache;
@@ -32,6 +33,7 @@ public class WinStreakPlugin extends JavaPlugin {
     String PLUGIN_VERSION = getDescription().getVersion();
     private BedWars BEDWARS;
     private com.andrei1058.bedwars.proxy.api.BedWars BEDWARS_PROXY;
+    private PrivateGames PRIVATE_GAMES;
     private DatabaseManager DATABASE_MANAGER;
     private FilesManager FILES_MANAGER;
     private StreakCache STREAK_CACHE;
@@ -92,13 +94,19 @@ public class WinStreakPlugin extends JavaPlugin {
             Bukkit.getLogger().severe("There is no BedWars plugin installed!");
             Bukkit.getLogger().severe("Disabling...");
             Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        if (Bukkit.getPluginManager().getPlugin("BedWars1058-PrivateGames") != null) {
+            PRIVATE_GAMES = Bukkit.getServicesManager().getRegistration(PrivateGames.class).getProvider();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &fBedWars1058-PrivateGames &7found and hooked successfully."));
         }
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new PlaceholderAPIBuilder(this).register();
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &fPlaceholderAPI &7found and hooked successfully."));
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
+            new PlaceholderAPIBuilder(this).register();
         }
     }
 
@@ -106,6 +114,7 @@ public class WinStreakPlugin extends JavaPlugin {
 
         if (isBedWars1058Present()) {
             this.DATABASE_MANAGER = getBedWarsAPI().getConfigs().getMainConfig().getBoolean("database.enable") ? new MySQL(this) : new SQLite(this);
+            this.DATABASE_MANAGER.initializeTable();
         } else if (isBedWarsProxyPresent()) {
             File proxyConfig = new File("plugins/BedWarsProxy/config.yml");
             YamlConfiguration configYaml = YamlConfiguration.loadConfiguration(proxyConfig);
@@ -162,6 +171,10 @@ public class WinStreakPlugin extends JavaPlugin {
 
     public com.andrei1058.bedwars.proxy.api.BedWars getBedWarsProxyAPI(){
         return BEDWARS_PROXY;
+    }
+
+    public PrivateGames getPrivateGamesAPI(){
+        return PRIVATE_GAMES;
     }
 
     public DatabaseManager getDatabaseManager() {

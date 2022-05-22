@@ -73,14 +73,14 @@ public class StreakAdminCommand extends BukkitCommand {
                         return true;
                     }
 
-                    streakProperties.setCurrentStreak(streakProperties.getCurrentStreak() + Integer.parseInt(args[2]));
+                    streakProperties.setStreak(streakProperties.getStreak() + Integer.parseInt(args[2]));
                     PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-added")
                             .replace("{PLAYER}", target.getName())
                             .replace("{AMOUNT}", args[2])
-                            .replace("{WIN_STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
+                            .replace("{WIN_STREAK}", String.valueOf(streakProperties.getStreak())));
 
-                    if (streakProperties.getCurrentStreak() > streakProperties.getBestStreak()) {
-                        streakProperties.setBestStreak(streakProperties.getCurrentStreak());
+                    if (streakProperties.getStreak() > streakProperties.getBestStreak()) {
+                        streakProperties.setBestStreak(streakProperties.getStreak());
                     }
                 } catch (NumberFormatException e) {
                     PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
@@ -104,18 +104,18 @@ public class StreakAdminCommand extends BukkitCommand {
                         return true;
                     }
 
-                    if (streakProperties.getCurrentStreak() < Integer.parseInt(args[2]) && Integer.parseInt(args[2]) != 0) {
+                    if (streakProperties.getStreak() < Integer.parseInt(args[2]) && Integer.parseInt(args[2]) != 0) {
                         PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-enough-streak")
                                 .replace("{PLAYER}", target.getName())
-                                .replace("{WIN_STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
+                                .replace("{WIN_STREAK}", String.valueOf(streakProperties.getStreak())));
 
                         return false;
                     }
-                    streakProperties.setCurrentStreak(streakProperties.getCurrentStreak() - Integer.parseInt(args[2]));
+                    streakProperties.setStreak(streakProperties.getStreak() - Integer.parseInt(args[2]));
                     PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-removed")
                             .replace("{PLAYER}", target.getName())
                             .replace("{AMOUNT}", args[2])
-                            .replace("{WIN_STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
+                            .replace("{WIN_STREAK}", String.valueOf(streakProperties.getStreak())));
                 } catch (NumberFormatException e) {
                     PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
                             .replace("{NUMBER}", args[2]));
@@ -137,12 +137,12 @@ public class StreakAdminCommand extends BukkitCommand {
                         return true;
                     }
 
-                    streakProperties.setCurrentStreak(Integer.parseInt(args[2]));
+                    streakProperties.setStreak(Integer.parseInt(args[2]));
                     PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-set")
                             .replace("{PLAYER}", target.getName())
-                            .replace("{WIN_STREAK}", String.valueOf(streakProperties.getCurrentStreak())));
+                            .replace("{WIN_STREAK}", String.valueOf(streakProperties.getStreak())));
 
-                    if (streakProperties.getCurrentStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getCurrentStreak());
+                    if (streakProperties.getStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getStreak());
                 } catch (NumberFormatException e) {
                     PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
                             .replace("{NUMBER}", args[2]));
@@ -152,7 +152,7 @@ public class StreakAdminCommand extends BukkitCommand {
 
             case "reset":
 
-                streakProperties.setCurrentStreak(0);
+                streakProperties.setStreak(0);
                 PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-reset")
                         .replace("{PLAYER}", target.getName()));
                 return true;

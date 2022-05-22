@@ -43,9 +43,9 @@ public class InGameStreakProperties implements Listener {
             if (PLUGIN.getBedWarsAPI().getArenaUtil().isSpectating(player)) return;
 
             StreakProperties streakProperties = PLUGIN.getStreakCache().get(playerUUID);
-            streakProperties.setCurrentStreak(streakProperties.getCurrentStreak() + 1);
+            streakProperties.setStreak(streakProperties.getStreak() + 1);
 
-            if (streakProperties.getCurrentStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getCurrentStreak());
+            if (streakProperties.getStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getStreak());
         });
     }
 
@@ -71,6 +71,6 @@ public class InGameStreakProperties implements Listener {
         UUID victimUUID = victim.getUniqueId();
 
         StreakProperties streakProperties = PLUGIN.getStreakCache().get(victimUUID);
-        streakProperties.setCurrentStreak(0);
+        streakProperties.setStreak(0);
     }
 }

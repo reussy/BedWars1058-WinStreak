@@ -117,7 +117,7 @@ public class MySQL implements DatabaseManager {
                 statement.setString(1, uuid.toString());
                 try (ResultSet result = statement.executeQuery()) {
                     if (result.next()) {
-                        streakProperties.setCurrentStreak(result.getInt("current_streak"));
+                        streakProperties.setStreak(result.getInt("current_streak"));
                         streakProperties.setBestStreak(result.getInt("best_streak"));
                     }
                 }
@@ -133,19 +133,19 @@ public class MySQL implements DatabaseManager {
 
         String s;
         try (Connection connection = HIKARI_DATASOURCE.getConnection()) {
-            if (hasStreakProfile(streakProperties.getUuid())) {
+            if (hasStreakProfile(streakProperties.getUUID())) {
                 s = "UPDATE `bw1058_winstreak` SET current_streak=?, best_streak=? WHERE uuid=?;";
                 try (PreparedStatement statement = connection.prepareStatement(s)) {
-                    statement.setInt(1, streakProperties.getCurrentStreak());
+                    statement.setInt(1, streakProperties.getStreak());
                     statement.setInt(2, streakProperties.getBestStreak());
-                    statement.setString(3, streakProperties.getUuid().toString());
+                    statement.setString(3, streakProperties.getUUID().toString());
                     statement.executeUpdate();
                 }
             } else {
                 s = "INSERT INTO `bw1058_winstreak` (uuid, current_streak, best_streak) VALUES (?,?,?);";
                 try (PreparedStatement statement = connection.prepareStatement(s)) {
-                    statement.setString(1, streakProperties.getUuid().toString());
-                    statement.setInt(2, streakProperties.getCurrentStreak());
+                    statement.setString(1, streakProperties.getUUID().toString());
+                    statement.setInt(2, streakProperties.getStreak());
                     statement.setInt(3, streakProperties.getBestStreak());
                     statement.executeUpdate();
                 }

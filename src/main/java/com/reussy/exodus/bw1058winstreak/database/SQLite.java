@@ -52,7 +52,7 @@ public class SQLite implements DatabaseManager {
     @Override
     public boolean hasStreakProfile(UUID uuid) {
 
-        String select = "SELECT uuid FROM bw1058_winstreak WHERE uuid = ?;";
+        String select = "SELECT uuid FROM `bw1058_winstreak` WHERE uuid = ?;";
         try {
             isClosed();
             try (PreparedStatement statement = CONNECTION.prepareStatement(select)) {

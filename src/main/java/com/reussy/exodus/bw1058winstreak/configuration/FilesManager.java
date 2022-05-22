@@ -3,6 +3,7 @@ package com.reussy.exodus.bw1058winstreak.configuration;
 import com.andrei1058.bedwars.api.language.Language;
 import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -52,6 +53,9 @@ public class FilesManager {
 
         CONFIG_YAML.options().header("BedWars1058-WinStreak Configuration File\nBe careful when edit the configuration\nYAML Parser: https://yamlchecker.com");
         CONFIG_YAML.addDefault("general.debug", true);
+        if (Bukkit.getPluginManager().getPlugin("BedWars1058-PrivateGames") != null){
+            CONFIG_YAML.addDefault("general.enable-streak-in-private-games", true);
+        }
         CONFIG_YAML.options().copyDefaults(true);
         savePluginConfig();
     }

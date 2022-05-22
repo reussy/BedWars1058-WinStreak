@@ -104,7 +104,14 @@
             <artifactId>proxy-api</artifactId>
             <version>1.2.4</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}\libraries\proxy-api-1.2.4.jar</systemPath>
+            <systemPath>${pom.basedir}\libraries\proxy-api-1.2.4.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>me.mherzaqaryan</groupId>
+            <artifactId>private-games-api</artifactId>
+            <version>1.1.7</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}\libraries\private-games-api-1.1.7.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>

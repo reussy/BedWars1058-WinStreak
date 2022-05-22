@@ -31,6 +31,11 @@ public class InGameStreakProperties implements Listener {
 
         if (e.getNewState() != GameState.restarting) return;
 
+        if (PLUGIN.getPrivateGamesAPI() != null) {
+            if (!PLUGIN.getFilesManager().getPluginConfig().getBoolean("general.enable-streak-in-private-games")
+                    && PLUGIN.getPrivateGamesAPI().getPrivateGameUtil().isPrivateGame(e.getArena().getArenaName())) return;
+        }
+
         e.getArena().getPlayers().forEach(player -> {
 
             UUID playerUUID = player.getUniqueId();
@@ -53,6 +58,11 @@ public class InGameStreakProperties implements Listener {
         Player victim = e.getVictim();
 
         if (e.getArena().getStatus() != GameState.playing) return;
+
+        if (PLUGIN.getPrivateGamesAPI() != null) {
+            if (!PLUGIN.getFilesManager().getPluginConfig().getBoolean("general.enable-streak-in-private-games")
+                    && PLUGIN.getPrivateGamesAPI().getPrivateGameUtil().isPrivateGame(e.getArena().getArenaName())) return;
+        }
 
         if (!PLUGIN.getBedWarsAPI().getArenaUtil().isPlaying(victim)) return;
 

@@ -1,10 +1,11 @@
 package com.reussy.exodus.bw1058winstreak.listeners;
 
 import com.andrei1058.bedwars.api.arena.GameState;
-import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
+import com.andrei1058.bedwars.api.events.gameplay.GameEndEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
 import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
 import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,22 +28,18 @@ public class InGameStreakProperties implements Listener {
     * is higher than the best streak.
      */
     @EventHandler
-    public void onWin(GameStateChangeEvent e) {
-
-        if (e.getNewState() != GameState.restarting) return;
+    public void onWin(GameEndEvent e) {
 
         if (PLUGIN.getPrivateGamesAPI() != null) {
             if (!PLUGIN.getFilesManager().getPluginConfig().getBoolean("general.enable-streak-in-private-games")
                     && PLUGIN.getPrivateGamesAPI().getPrivateGameUtil().isPrivateGame(e.getArena().getArenaName())) return;
         }
 
-        e.getArena().getPlayers().forEach(player -> {
+        e.getWinners().forEach(uuid -> {
 
-            UUID playerUUID = player.getUniqueId();
+            Player player = Bukkit.getPlayer(uuid);
 
-            if (PLUGIN.getBedWarsAPI().getArenaUtil().isSpectating(player)) return;
-
-            StreakProperties streakProperties = PLUGIN.getStreakCache().get(playerUUID);
+            StreakProperties streakProperties = PLUGIN.getStreakCache().get(player.getUniqueId());
             streakProperties.setStreak(streakProperties.getStreak() + 1);
 
             if (streakProperties.getStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getStreak());

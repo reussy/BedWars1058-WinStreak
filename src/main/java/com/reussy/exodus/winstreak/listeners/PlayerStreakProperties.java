@@ -1,8 +1,8 @@
-package com.reussy.exodus.bw1058winstreak.listeners;
+package com.reussy.exodus.winstreak.listeners;
 
 import com.andrei1058.bedwars.api.server.ServerType;
-import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
-import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
+import com.reussy.exodus.winstreak.WinStreakPlugin;
+import com.reussy.exodus.winstreak.cache.StreakProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

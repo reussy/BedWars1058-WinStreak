@@ -1,7 +1,7 @@
-package com.reussy.exodus.bw1058winstreak.commads;
+package com.reussy.exodus.winstreak.commads;
 
-import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
-import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
+import com.reussy.exodus.winstreak.WinStreakPlugin;
+import com.reussy.exodus.winstreak.cache.StreakProperties;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;

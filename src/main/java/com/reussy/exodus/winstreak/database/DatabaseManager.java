@@ -1,6 +1,6 @@
-package com.reussy.exodus.bw1058winstreak.database;
+package com.reussy.exodus.winstreak.database;
 
-import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
+import com.reussy.exodus.winstreak.cache.StreakProperties;
 
 import java.util.UUID;
 

@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 
 public class StreakCommandProxy extends BukkitCommand {
 
-    private final WinStreakPlugin PLUGIN;
+    private final WinStreakPlugin plugin;
 
     public StreakCommandProxy(WinStreakPlugin plugin) {
         super("streak");
-        this.PLUGIN = plugin;
+        this.plugin = plugin;
     }
 
     /**
@@ -29,13 +29,13 @@ public class StreakCommandProxy extends BukkitCommand {
 
         Player player = (Player) sender;
 
-        StreakProperties streakProperties = PLUGIN.getStreakCache().get(player.getUniqueId());
+        StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());
 
         if (args.length > 0 && "-best".equals(args[0])) {
-            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
+            plugin.getMessageUtils().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
                     .replace("{BEST_STREAK}", String.valueOf(streakProperties.getBestStreak())));
         } else {
-            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
+            plugin.getMessageUtils().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
                     .replace("{STREAK}", String.valueOf(streakProperties.getStreak())));
         }
 

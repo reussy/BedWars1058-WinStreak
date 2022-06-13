@@ -14,12 +14,12 @@ import java.util.UUID;
 
 public class InGameStreakProperties implements Listener {
 
-    private final WinStreakPlugin PLUGIN;
+    private final WinStreakPlugin plugin;
     //private final int time;
 
     public InGameStreakProperties(WinStreakPlugin plugin) {
-        this.PLUGIN = plugin;
-        //this.time = PLUGIN.getBedWarsAPI().getConfigs().getMainConfig().getInt("rejoin-time");
+        this.plugin = plugin;
+        //this.time = plugin.getBedWarsAPI().getConfigs().getMainConfig().getInt("rejoin-time");
     }
 
     /*
@@ -30,16 +30,16 @@ public class InGameStreakProperties implements Listener {
     @EventHandler
     public void onWin(GameEndEvent e) {
 
-        if (PLUGIN.getPrivateGamesAPI() != null) {
-            if (!PLUGIN.getFilesManager().getPluginConfig().getBoolean("general.enable-streak-in-private-games")
-                    && PLUGIN.getPrivateGamesAPI().getPrivateGameUtil().isPrivateGame(e.getArena().getArenaName())) return;
+        if (plugin.getPrivateGamesAPI() != null) {
+            if (!plugin.getFilesManager().getPluginConfig().getBoolean("general.enable-streak-in-private-games")
+                    && plugin.getPrivateGamesAPI().getPrivateGameUtil().isPrivateGame(e.getArena().getArenaName())) return;
         }
 
         e.getWinners().forEach(uuid -> {
 
             Player player = Bukkit.getPlayer(uuid);
 
-            StreakProperties streakProperties = PLUGIN.getStreakCache().get(player.getUniqueId());
+            StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());
             streakProperties.setStreak(streakProperties.getStreak() + 1);
 
             if (streakProperties.getStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getStreak());
@@ -56,18 +56,18 @@ public class InGameStreakProperties implements Listener {
 
         if (e.getArena().getStatus() != GameState.playing) return;
 
-        if (PLUGIN.getPrivateGamesAPI() != null) {
-            if (!PLUGIN.getFilesManager().getPluginConfig().getBoolean("general.enable-streak-in-private-games")
-                    && PLUGIN.getPrivateGamesAPI().getPrivateGameUtil().isPrivateGame(e.getArena().getArenaName())) return;
+        if (plugin.getPrivateGamesAPI() != null) {
+            if (!plugin.getFilesManager().getPluginConfig().getBoolean("general.enable-streak-in-private-games")
+                    && plugin.getPrivateGamesAPI().getPrivateGameUtil().isPrivateGame(e.getArena().getArenaName())) return;
         }
 
-        if (!PLUGIN.getBedWarsAPI().getArenaUtil().isPlaying(victim)) return;
+        if (!plugin.getBedWarsAPI().getArenaUtil().isPlaying(victim)) return;
 
         if (victim == null || !e.getCause().isFinalKill()) return;
 
         UUID victimUUID = victim.getUniqueId();
 
-        StreakProperties streakProperties = PLUGIN.getStreakCache().get(victimUUID);
+        StreakProperties streakProperties = plugin.getStreakCache().get(victimUUID);
         streakProperties.setStreak(0);
     }
 }

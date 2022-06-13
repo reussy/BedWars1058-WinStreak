@@ -29,21 +29,21 @@ import java.lang.reflect.Field;
 
 public class WinStreakPlugin extends JavaPlugin {
 
-    String PLUGIN_NAME = "BedWars1058-WinStreak";
-    String PLUGIN_VERSION = getDescription().getVersion();
-    private BedWars BEDWARS;
-    private com.andrei1058.bedwars.proxy.api.BedWars BEDWARS_PROXY;
-    private PrivateGames PRIVATE_GAMES;
-    private DatabaseManager DATABASE_MANAGER;
-    private FilesManager FILES_MANAGER;
-    private StreakCache STREAK_CACHE;
-    private MessageUtils MESSAGE_UTILS;
+    String pluginName = "BedWars1058-WinStreak";
+    String pluginVersion = getDescription().getVersion();
+    private BedWars bedWars;
+    private com.andrei1058.bedwars.proxy.api.BedWars bedWarsProxy;
+    private PrivateGames privateGames;
+    private DatabaseManager databaseManager;
+    private FilesManager filesManager;
+    private StreakCache streakCache;
+    private MessageUtils messageUtils;
 
     @Override
     public void onEnable() {
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r ----------------------------------------------"));
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &7Enabling &f" + this.PLUGIN_NAME + " v" + this.PLUGIN_VERSION + " &7..."));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &7Enabling &f" + this.pluginName + " v" + this.pluginVersion + " &7..."));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &7Developed by&f reussy"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &7Running Java &f" + System.getProperty("java.version")));
@@ -53,12 +53,12 @@ public class WinStreakPlugin extends JavaPlugin {
         initEvents();
         initCommands();
         try {
-            this.FILES_MANAGER = new FilesManager(this);
+            this.filesManager = new FilesManager(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.STREAK_CACHE = new StreakCache();
-        this.MESSAGE_UTILS = new MessageUtils();
+        this.streakCache = new StreakCache();
+        this.messageUtils = new MessageUtils();
     }
 
     @Override
@@ -81,12 +81,12 @@ public class WinStreakPlugin extends JavaPlugin {
     private void initHooks() {
 
         if (isBedWars1058Present()) {
-            this.BEDWARS = Bukkit.getServicesManager().getRegistration(BedWars.class).getProvider();
+            this.bedWars = Bukkit.getServicesManager().getRegistration(BedWars.class).getProvider();
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &fBedWars1058 &7found and hooked successfully."));
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
         } else if (isBedWarsProxyPresent()) {
-            this.BEDWARS_PROXY = Bukkit.getServicesManager().getRegistration(com.andrei1058.bedwars.proxy.api.BedWars.class).getProvider();
+            this.bedWarsProxy = Bukkit.getServicesManager().getRegistration(com.andrei1058.bedwars.proxy.api.BedWars.class).getProvider();
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &fBedWarsProxy &7found and hooked successfully."));
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r "));
@@ -98,7 +98,7 @@ public class WinStreakPlugin extends JavaPlugin {
         }
 
         if (Bukkit.getPluginManager().getPlugin("BedWars1058-PrivateGames") != null) {
-            PRIVATE_GAMES = Bukkit.getServicesManager().getRegistration(PrivateGames.class).getProvider();
+            privateGames = Bukkit.getServicesManager().getRegistration(PrivateGames.class).getProvider();
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "  &fBedWars1058-PrivateGames &7found and hooked successfully."));
         }
 
@@ -113,12 +113,12 @@ public class WinStreakPlugin extends JavaPlugin {
     private void initDatabase() {
 
         if (isBedWars1058Present()) {
-            this.DATABASE_MANAGER = getBedWarsAPI().getConfigs().getMainConfig().getBoolean("database.enable") ? new MySQL(this) : new SQLite(this);
-            this.DATABASE_MANAGER.initializeTable();
+            this.databaseManager = getBedWarsAPI().getConfigs().getMainConfig().getBoolean("database.enable") ? new MySQL(this) : new SQLite(this);
+            this.databaseManager.initializeTable();
         } else if (isBedWarsProxyPresent()) {
             File proxyConfig = new File("plugins/BedWarsProxy/config.yml");
             YamlConfiguration configYaml = YamlConfiguration.loadConfiguration(proxyConfig);
-            this.DATABASE_MANAGER = configYaml.getBoolean("database.enable") ? new MySQL(this) : new SQLite(this);
+            this.databaseManager = configYaml.getBoolean("database.enable") ? new MySQL(this) : new SQLite(this);
         }
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&r ----------------------------------------------"));
     }
@@ -166,30 +166,30 @@ public class WinStreakPlugin extends JavaPlugin {
     }
 
     public BedWars getBedWarsAPI() {
-        return BEDWARS;
+        return bedWars;
     }
 
     public com.andrei1058.bedwars.proxy.api.BedWars getBedWarsProxyAPI(){
-        return BEDWARS_PROXY;
+        return bedWarsProxy;
     }
 
     public PrivateGames getPrivateGamesAPI(){
-        return PRIVATE_GAMES;
+        return privateGames;
     }
 
     public DatabaseManager getDatabaseManager() {
-        return DATABASE_MANAGER;
+        return databaseManager;
     }
 
     public FilesManager getFilesManager() {
-        return FILES_MANAGER;
+        return filesManager;
     }
 
     public StreakCache getStreakCache() {
-        return STREAK_CACHE;
+        return streakCache;
     }
 
     public MessageUtils getMessageUtils() {
-        return MESSAGE_UTILS;
+        return messageUtils;
     }
 }

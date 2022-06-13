@@ -14,10 +14,10 @@ import java.util.UUID;
 
 public class PlayerStreakProperties implements Listener {
 
-    private final WinStreakPlugin PLUGIN;
+    private final WinStreakPlugin plugin;
 
     public PlayerStreakProperties(WinStreakPlugin plugin) {
-        this.PLUGIN = plugin;
+        this.plugin = plugin;
     }
 
     /*
@@ -29,44 +29,44 @@ public class PlayerStreakProperties implements Listener {
 
         UUID uuid = e.getPlayer().getUniqueId();
 
-        if (PLUGIN.isBedWars1058Present()) {
+        if (plugin.isBedWars1058Present()) {
 
             /*
              * This condition handles the MULTI_ARENA and SHARED servers, we do not need to delay the loading of the cache.
              */
-            if (PLUGIN.getBedWarsAPI().getServerType() == ServerType.MULTIARENA || PLUGIN.getBedWarsAPI().getServerType() == ServerType.SHARED){
-                Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, () -> {
-                    PLUGIN.getStreakCache().destroy(uuid);
-                    StreakProperties streakProperties = PLUGIN.getDatabaseManager().initializeStreakProperties(uuid);
-                    PLUGIN.getStreakCache().load(uuid, streakProperties);
+            if (plugin.getBedWarsAPI().getServerType() == ServerType.MULTIARENA || plugin.getBedWarsAPI().getServerType() == ServerType.SHARED){
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                    plugin.getStreakCache().destroy(uuid);
+                    StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
+                    plugin.getStreakCache().load(uuid, streakProperties);
 
-                    if (PLUGIN.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
-                        PLUGIN.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s streak cache was loaded.");
+                    if (plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
+                        plugin.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s streak cache was loaded.");
                     }
                 });
 
                 /*
                  * This condition handles the BUNGEE servers and if necessary delay the loading of the cache to synchronize with the arena servers.
                  */
-            } else if (PLUGIN.getBedWarsAPI().getServerType() == ServerType.BUNGEE){
-                Bukkit.getScheduler().runTaskLaterAsynchronously(PLUGIN, () -> {
-                    PLUGIN.getStreakCache().destroy(uuid);
-                    StreakProperties streakProperties = PLUGIN.getDatabaseManager().initializeStreakProperties(uuid);
-                    PLUGIN.getStreakCache().load(uuid, streakProperties);
+            } else if (plugin.getBedWarsAPI().getServerType() == ServerType.BUNGEE){
+                Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+                    plugin.getStreakCache().destroy(uuid);
+                    StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
+                    plugin.getStreakCache().load(uuid, streakProperties);
 
-                    if (PLUGIN.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
-                        PLUGIN.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s streak cache was loaded.");
+                    if (plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
+                        plugin.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s streak cache was loaded.");
                     }
                 }, 2L);
             }
-        } else if (PLUGIN.isBedWarsProxyPresent()){
-            Bukkit.getScheduler().runTaskLaterAsynchronously(PLUGIN, () -> {
-                PLUGIN.getStreakCache().destroy(uuid);
-                StreakProperties streakProperties = PLUGIN.getDatabaseManager().initializeStreakProperties(uuid);
-                PLUGIN.getStreakCache().load(uuid, streakProperties);
+        } else if (plugin.isBedWarsProxyPresent()){
+            Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+                plugin.getStreakCache().destroy(uuid);
+                StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
+                plugin.getStreakCache().load(uuid, streakProperties);
 
-                if (PLUGIN.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
-                    PLUGIN.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s streak cache was loaded.");
+                if (plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
+                    plugin.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s streak cache was loaded.");
                 }
             }, 2L);
         }
@@ -79,14 +79,14 @@ public class PlayerStreakProperties implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent e) {
 
-        if (!PLUGIN.getStreakCache().isInCache(e.getPlayer().getUniqueId())) return;
+        if (!plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())) return;
 
-        StreakProperties streakProperties = PLUGIN.getStreakCache().get(e.getPlayer().getUniqueId());
-        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, () -> PLUGIN.getDatabaseManager().saveStreakProperties(streakProperties));
-        PLUGIN.getStreakCache().destroy(e.getPlayer().getUniqueId());
+        StreakProperties streakProperties = plugin.getStreakCache().get(e.getPlayer().getUniqueId());
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> plugin.getDatabaseManager().saveStreakProperties(streakProperties));
+        plugin.getStreakCache().destroy(e.getPlayer().getUniqueId());
 
-        if (!PLUGIN.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
-            PLUGIN.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s profile cache was saved and destroyed.");
+        if (!plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
+            plugin.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s profile cache was saved and destroyed.");
         }
     }
 }

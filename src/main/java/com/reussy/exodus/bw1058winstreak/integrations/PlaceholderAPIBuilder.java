@@ -8,10 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlaceholderAPIBuilder extends PlaceholderExpansion {
 
-    private final WinStreakPlugin PLUGIN;
+    private final WinStreakPlugin plugin;
 
     public PlaceholderAPIBuilder(WinStreakPlugin plugin) {
-        this.PLUGIN = plugin;
+        this.plugin = plugin;
     }
 
     /**
@@ -55,7 +55,7 @@ public class PlaceholderAPIBuilder extends PlaceholderExpansion {
 
         if (player == null) return "";
 
-        StreakProperties streakProperties = PLUGIN.getStreakCache().get(player.getUniqueId());
+        StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());
 
         if (streakProperties.getUUID() == null) return "";
 

@@ -18,11 +18,11 @@ import java.util.List;
 
 public class StreakCommand extends SubCommand {
 
-    private final WinStreakPlugin PLUGIN;
+    private final WinStreakPlugin plugin;
 
     public StreakCommand(WinStreakPlugin plugin, ParentCommand parentCommand, String subCommand) {
         super(parentCommand, subCommand);
-        this.PLUGIN = plugin;
+        this.plugin = plugin;
         setPriority(20);
         showInList(true);
         setDisplayInfo(textComponentBuilder("§6 ▪ §7/bw " + getSubCommandName() + "         §8- §eview your current winning streak"));
@@ -32,24 +32,24 @@ public class StreakCommand extends SubCommand {
     public boolean execute(String[] args, CommandSender commandSender) {
 
         if (!(commandSender instanceof Player)) {
-            Bukkit.getConsoleSender().sendMessage(PLUGIN.getMessageUtils().colorize("&cOnly players can use the command!"));
+            Bukkit.getConsoleSender().sendMessage(plugin.getMessageUtils().colorize("&cOnly players can use the command!"));
             return true;
         }
 
         Player player = (Player) commandSender;
 
-        if (PLUGIN.getBedWarsAPI().getArenaUtil().isPlaying(player) || PLUGIN.getBedWarsAPI().getArenaUtil().isSpectating(player)) {
+        if (plugin.getBedWarsAPI().getArenaUtil().isPlaying(player) || plugin.getBedWarsAPI().getArenaUtil().isSpectating(player)) {
             player.sendMessage(Language.getMsg(player, Messages.COMMAND_NOT_ALLOWED_IN_GAME));
             return true;
         }
 
-        StreakProperties streakProperties = PLUGIN.getStreakCache().get(player.getUniqueId());
+        StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());
 
         if (args.length > 0 && "-best".equals(args[0])) {
-            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
+            plugin.getMessageUtils().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
                     .replace("{BEST_STREAK}", String.valueOf(streakProperties.getBestStreak())));
         } else {
-            PLUGIN.getMessageUtils().send(player, PLUGIN.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
+            plugin.getMessageUtils().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
                     .replace("{STREAK}", String.valueOf(streakProperties.getStreak())));
         }
 

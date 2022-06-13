@@ -12,16 +12,16 @@ import java.io.IOException;
 
 public class FilesManager {
 
-    private final WinStreakPlugin PLUGIN;
-    File CONFIG_FILE;
-    YamlConfiguration CONFIG_YAML;
+    private final WinStreakPlugin plugin;
+    File configFile;
+    YamlConfiguration configYaml;
 
     public FilesManager(WinStreakPlugin plugin) throws IOException {
-        this.PLUGIN = plugin;
+        this.plugin = plugin;
 
         if (plugin.isBedWars1058Present()) {
-            CONFIG_FILE = new File("plugins/BedWars1058/Addons/WinStreak/config.yml");
-            CONFIG_YAML = YamlConfiguration.loadConfiguration(CONFIG_FILE);
+            configFile = new File("plugins/BedWars1058/Addons/WinStreak/config.yml");
+            configYaml = YamlConfiguration.loadConfiguration(configFile);
 
             createFile();
             addConfigPaths();
@@ -29,8 +29,8 @@ public class FilesManager {
 
         } else if (plugin.isBedWarsProxyPresent()) {
 
-            CONFIG_FILE = new File("plugins/BedWarsProxy/Addons/WinStreak/config.yml");
-            CONFIG_YAML = YamlConfiguration.loadConfiguration(CONFIG_FILE);
+            configFile = new File("plugins/BedWarsProxy/Addons/WinStreak/config.yml");
+            configYaml = YamlConfiguration.loadConfiguration(configFile);
 
             createFile();
             addConfigPaths();
@@ -41,9 +41,9 @@ public class FilesManager {
 
     public void createFile() {
 
-        if (!CONFIG_FILE.exists()) {
+        if (!configFile.exists()) {
             try {
-                CONFIG_FILE.createNewFile();
+                configFile.createNewFile();
             } catch (IOException ignored) {
             }
         }
@@ -51,31 +51,31 @@ public class FilesManager {
 
     public void addConfigPaths() {
 
-        CONFIG_YAML.options().header("BedWars1058-WinStreak Configuration File\nBe careful when edit the configuration\nYAML Parser: https://yamlchecker.com");
-        CONFIG_YAML.addDefault("general.debug", true);
+        configYaml.options().header("BedWars1058-WinStreak Configuration File\nBe careful when edit the configuration\nYAML Parser: https://yamlchecker.com");
+        configYaml.addDefault("general.debug", true);
         if (Bukkit.getPluginManager().getPlugin("BedWars1058-PrivateGames") != null){
-            CONFIG_YAML.addDefault("general.enable-streak-in-private-games", true);
+            configYaml.addDefault("general.enable-streak-in-private-games", true);
         }
-        CONFIG_YAML.options().copyDefaults(true);
+        configYaml.options().copyDefaults(true);
         savePluginConfig();
     }
 
     public YamlConfiguration getPluginConfig() {
-        return CONFIG_YAML;
+        return configYaml;
     }
 
     public void savePluginConfig() {
 
-        Validate.notNull(CONFIG_FILE, "config.yml cannot be null!");
+        Validate.notNull(configFile, "config.yml cannot be null!");
         try {
-            getPluginConfig().save(CONFIG_FILE);
+            getPluginConfig().save(configFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void reloadPluginConfig() {
-        CONFIG_YAML = YamlConfiguration.loadConfiguration(CONFIG_FILE);
+        configYaml = YamlConfiguration.loadConfiguration(configFile);
     }
 
     //TO-DO
@@ -84,10 +84,10 @@ public class FilesManager {
      */
     public YamlConfiguration getBedWarsLang() {
 
-        if (PLUGIN.isBedWars1058Present()) {
-            String iso = PLUGIN.getBedWarsAPI().getConfigs().getMainConfig().getString("language");
-            return PLUGIN.getBedWarsAPI().getLanguageByIso(iso).getYml();
-        } else if (PLUGIN.isBedWarsProxyPresent()) {
+        if (plugin.isBedWars1058Present()) {
+            String iso = plugin.getBedWarsAPI().getConfigs().getMainConfig().getString("language");
+            return plugin.getBedWarsAPI().getLanguageByIso(iso).getYml();
+        } else if (plugin.isBedWarsProxyPresent()) {
             File proxyLanguage = new File("plugins/BedWarsProxy/Languages/messages_en.yml");
             return YamlConfiguration.loadConfiguration(proxyLanguage);
         }
@@ -96,10 +96,10 @@ public class FilesManager {
 
     public YamlConfiguration getPlayerLanguage(Player player){
 
-        if (PLUGIN.isBedWars1058Present()) {
-            return PLUGIN.getBedWarsAPI().getPlayerLanguage(player).getYml();
-        } else if (PLUGIN.isBedWarsProxyPresent()) {
-            String ISO = PLUGIN.getBedWarsProxyAPI().getLanguageUtil().getPlayerLanguage(player).getIso();
+        if (plugin.isBedWars1058Present()) {
+            return plugin.getBedWarsAPI().getPlayerLanguage(player).getYml();
+        } else if (plugin.isBedWarsProxyPresent()) {
+            String ISO = plugin.getBedWarsProxyAPI().getLanguageUtil().getPlayerLanguage(player).getIso();
             File file = new File("plugins/BedWarsProxy/Languages/messages_" + ISO + ".yml");
             return YamlConfiguration.loadConfiguration(file);
         }
@@ -109,7 +109,7 @@ public class FilesManager {
 
     public void addLanguagePaths() throws IOException {
 
-        if (PLUGIN.isBedWars1058Present()) {
+        if (plugin.isBedWars1058Present()) {
 
             //TO-DO
             /*
@@ -165,9 +165,9 @@ public class FilesManager {
                 }
                 language.save();
             }
-        } else if (PLUGIN.isBedWarsProxyPresent()) {
+        } else if (plugin.isBedWarsProxyPresent()) {
 
-            for (com.andrei1058.bedwars.proxy.api.Language language : PLUGIN.getBedWarsProxyAPI().getLanguageUtil().getLanguages()){
+            for (com.andrei1058.bedwars.proxy.api.Language language : plugin.getBedWarsProxyAPI().getLanguageUtil().getLanguages()){
 
                 File file = new File("plugins/BedWarsProxy/Languages/messages_" + language.getIso() + ".yml");
                 YamlConfiguration languageYaml = YamlConfiguration.loadConfiguration(file);

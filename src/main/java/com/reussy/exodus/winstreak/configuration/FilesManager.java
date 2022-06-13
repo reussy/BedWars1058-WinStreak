@@ -119,7 +119,8 @@ public class FilesManager {
                     /*
                      * Translated by @reussy
                      */
-                    case "es" -> {
+                    case "es":
+
                         languageYaml.addDefault("addons.win-streak.player-streak", "&7Tu racha de victorias es {STREAK}");
                         languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Tu mejor racha de victorias es {BEST_STREAK}");
                         languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} no está conectado.");
@@ -129,12 +130,12 @@ public class FilesManager {
                         languageYaml.addDefault("addons.win-streak.successfully-removed", "&7Una racha de {AMOUNT} se ha removido a {PLAYER}. {PLAYER} ahora tiene {WIN_STREAK} racha de victorias.");
                         languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} ahora tiene {WIN_STREAK} racha de victorias.");
                         languageYaml.addDefault("addons.win-streak.successfully-reset", "&7Has reinciado la racha de {PLAYER} a 0");
-                    }
+                        break;
 
                     /*
                      * Translated by @Xx_yuri2005_xX
                      */
-                    case "it" -> {
+                    case "it":
                         languageYaml.addDefault("addons.win-streak.player-streak", "&7La tua striscia vincente è {STREAK}");
                         languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Your best winning streak is {BEST_STREAK}");
                         languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} is not online.");
@@ -144,9 +145,10 @@ public class FilesManager {
                         languageYaml.addDefault("addons.win-streak.successfully-removed", "&7{AMOUNT} streaks has been removed to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
                         languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} now has {WIN_STREAK} Win Streak");
                         languageYaml.addDefault("addons.win-streak.successfully-reset", "&7You've reset {PLAYER} Win Streak to 0");
-                    }
+                        break;
 
-                    default -> {
+
+                    default:
                         languageYaml.addDefault("addons.win-streak.player-streak", "&7Your winning streak is {STREAK}");
                         languageYaml.addDefault("addons.win-streak.player-best-streak", "&7Your best winning streak is {BEST_STREAK}");
                         languageYaml.addDefault("addons.win-streak.unknown-player", "&c{PLAYER} is not online.");
@@ -156,7 +158,7 @@ public class FilesManager {
                         languageYaml.addDefault("addons.win-streak.successfully-removed", "&7{AMOUNT} streaks has been removed to {PLAYER}. {PLAYER} has {WIN_STREAK} Win Streak");
                         languageYaml.addDefault("addons.win-streak.successfully-set", "&7{PLAYER} now has {WIN_STREAK} Win Streak");
                         languageYaml.addDefault("addons.win-streak.successfully-reset", "&7You've reset {PLAYER} Win Streak to 0");
-                    }
+                        break;
                 }
                 language.save();
             }

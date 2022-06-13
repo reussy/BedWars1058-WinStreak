@@ -1,4 +1,4 @@
-package com.reussy.exodus.bw1058winstreak.utils;
+package com.reussy.exodus.winstreak.utils;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

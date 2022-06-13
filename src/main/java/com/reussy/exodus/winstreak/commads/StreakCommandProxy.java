@@ -1,7 +1,7 @@
-package com.reussy.exodus.bw1058winstreak.commads;
+package com.reussy.exodus.winstreak.commads;
 
-import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
-import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
+import com.reussy.exodus.winstreak.WinStreakPlugin;
+import com.reussy.exodus.winstreak.cache.StreakProperties;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;

@@ -1,10 +1,10 @@
-package com.reussy.exodus.bw1058winstreak.listeners;
+package com.reussy.exodus.winstreak.listeners;
 
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.events.gameplay.GameEndEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
-import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
-import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
+import com.reussy.exodus.winstreak.WinStreakPlugin;
+import com.reussy.exodus.winstreak.cache.StreakProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

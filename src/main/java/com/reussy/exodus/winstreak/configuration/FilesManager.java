@@ -1,7 +1,7 @@
-package com.reussy.exodus.bw1058winstreak.configuration;
+package com.reussy.exodus.winstreak.configuration;
 
 import com.andrei1058.bedwars.api.language.Language;
-import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
+import com.reussy.exodus.winstreak.WinStreakPlugin;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

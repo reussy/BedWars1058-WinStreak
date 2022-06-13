@@ -1,4 +1,4 @@
-package com.reussy.exodus.bw1058winstreak.cache;
+package com.reussy.exodus.winstreak.cache;
 
 import java.util.UUID;
 

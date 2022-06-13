@@ -1,7 +1,7 @@
-package com.reussy.exodus.bw1058winstreak.integrations;
+package com.reussy.exodus.winstreak.integrations;
 
-import com.reussy.exodus.bw1058winstreak.WinStreakPlugin;
-import com.reussy.exodus.bw1058winstreak.cache.StreakProperties;
+import com.reussy.exodus.winstreak.WinStreakPlugin;
+import com.reussy.exodus.winstreak.cache.StreakProperties;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;

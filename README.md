@@ -20,10 +20,12 @@ You can still contribute by reporting bugs so they can be fixed.
 ## Quick Links
 -   [Polymart Version][polymart]
 -   [Spigot Version][spigot]
+-   [mc-market][mc-market]
 -   [Discord][discord]
 
 [polymart]: https://polymart.org/resource/winstreak-bedwars1058-add-on.1871
 [spigot]: https://www.spigotmc.org/resources/bedwars1058-winstreak-addon-sqlite-mysql.97509/
+[mc-market]: https://www.mc-market.org/resources/24131/
 [discord]: https://discord.gg/nx7E9vecWp
 [decent-holograms]: https://www.spigotmc.org/resources/decent-holograms-1-8-1-18-2-papi-support-no-dependencies.96927/
 [ajleaderboards]: https://www.spigotmc.org/resources/ajleaderboards.85548/

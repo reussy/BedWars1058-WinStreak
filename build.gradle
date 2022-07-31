@@ -24,16 +24,17 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
-    implementation 'com.zaxxer:HikariCP:3.4.5'
-    implementation 'org.slf4j:slf4j-simple:1.7.32'
-    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+    implementation 'org.slf4j:slf4j-simple:1.7.36'
+    implementation 'org.jetbrains:annotations:23.0.0'
+
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
     compileOnly 'com.andrei1058.bedwars:bedwars-api:22.3.4'
     compileOnly 'me.clip:placeholderapi:2.11.1'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 compileJava {
     options.encoding = 'UTF-8'
@@ -60,7 +61,7 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archivesBaseName = rootProject.name
     from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+        configurations.runtimeClasspath.findAll { File file -> file.name.endsWith('jar') }.collect { zipTree(it) }
     }
 }
 

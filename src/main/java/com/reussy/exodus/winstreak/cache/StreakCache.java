@@ -29,13 +29,7 @@ public class StreakCache {
 
     public StreakProperties get(UUID uuid) {
 
-        StreakProperties streakProperties = cache.getOrDefault(uuid, new StreakProperties(uuid));
-
-        if (streakProperties == null) {
-            throw new IllegalStateException("[BW1058-WinStreak DEBUG]: The streak cache for " + uuid.toString() + " is null!");
-        }
-
-        return streakProperties;
+        return cache.get(uuid);
     }
 
     public boolean isInCache(UUID uuid){

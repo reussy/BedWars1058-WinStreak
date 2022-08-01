@@ -42,7 +42,7 @@ public class PlaceholderAPIBuilder extends PlaceholderExpansion {
      */
     @Override
     public @NotNull String getVersion() {
-        return "1.0.1";
+        return "1.1.2";
     }
 
     @Override
@@ -55,9 +55,13 @@ public class PlaceholderAPIBuilder extends PlaceholderExpansion {
 
         if (player == null) return "";
 
+        if (!plugin.getStreakCache().isInCache(player.getUniqueId())){
+            return "";
+        }
+
         StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());
 
-        if (streakProperties.getUUID() == null) return "";
+        if (streakProperties == null) return "";
 
         if (params.equalsIgnoreCase("streak")) return String.valueOf(streakProperties.getStreak());
 

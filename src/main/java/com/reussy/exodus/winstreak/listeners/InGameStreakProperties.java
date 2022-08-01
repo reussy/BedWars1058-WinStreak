@@ -14,50 +14,52 @@ import java.util.UUID;
 
 public class InGameStreakProperties implements Listener {
 
-    private final WinStreakPlugin PLUGIN;
-    //private final int time;
+    private final WinStreakPlugin plugin;
 
     public InGameStreakProperties(WinStreakPlugin plugin) {
-        this.PLUGIN = plugin;
-        //this.time = PLUGIN.getBedWarsAPI().getConfigs().getMainConfig().getInt("rejoin-time");
+        this.plugin = plugin;
     }
 
-    /*
-    * This event adds to the streak when the player wins the game.
-    * Also increment the best streak if the current streak
-    * is higher than the best streak.
+    /**
+     * This event adds to the streak when the player wins the game.
+     * Also increment the best streak if the current streak
+     * is higher than the best streak.
+     *
+     * @param event The event.
      */
     @EventHandler
-    public void onWin(GameEndEvent e) {
+    public void onWin(GameEndEvent event) {
 
-        e.getWinners().forEach(uuid -> {
+        event.getWinners().forEach(uuid -> {
 
             Player player = Bukkit.getPlayer(uuid);
 
-            StreakProperties streakProperties = PLUGIN.getStreakCache().get(player.getUniqueId());
+            StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());
             streakProperties.setStreak(streakProperties.getStreak() + 1);
 
             if (streakProperties.getStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getStreak());
         });
     }
 
-    /*
-    * This event clears the streak when the player is killed and his bed is broken.
+    /**
+     * This event resets the streak when the player dies.
+     *
+     * @param event The event.
      */
     @EventHandler
-    public void onDeath(PlayerKillEvent e) {
+    public void onDeath(PlayerKillEvent event) {
 
-        Player victim = e.getVictim();
+        Player victim = event.getVictim();
 
-        if (e.getArena().getStatus() != GameState.playing) return;
+        if (event.getArena().getStatus() != GameState.playing) return;
 
-        if (!PLUGIN.getBedWarsAPI().getArenaUtil().isPlaying(victim)) return;
+        if (!plugin.getBedWarsAPI().getArenaUtil().isPlaying(victim)) return;
 
-        if (victim == null || !e.getCause().isFinalKill()) return;
+        if (victim == null || !event.getCause().isFinalKill()) return;
 
         UUID victimUUID = victim.getUniqueId();
 
-        StreakProperties streakProperties = PLUGIN.getStreakCache().get(victimUUID);
+        StreakProperties streakProperties = plugin.getStreakCache().get(victimUUID);
         streakProperties.setStreak(0);
     }
 }

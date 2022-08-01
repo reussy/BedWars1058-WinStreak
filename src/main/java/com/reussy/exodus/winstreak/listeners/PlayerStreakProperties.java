@@ -20,14 +20,14 @@ public class PlayerStreakProperties implements Listener {
         this.plugin = plugin;
     }
 
-    /*
+    /**
      * This method loads the cache when the player logs in to the server.
      * It also takes care of verifying what type of server your BedWars is running.
      */
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
+    public void onJoin(PlayerJoinEvent event) {
 
-        UUID uuid = e.getPlayer().getUniqueId();
+        UUID uuid = event.getPlayer().getUniqueId();
 
         if (plugin.isBedWars1058Present()) {
 
@@ -40,8 +40,8 @@ public class PlayerStreakProperties implements Listener {
                     StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
                     plugin.getStreakCache().load(uuid, streakProperties);
 
-                    if (plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
-                        plugin.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s streak cache was loaded.");
+                    if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())){
+                        plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s streak cache was loaded.");
                     }
                 });
 
@@ -54,8 +54,8 @@ public class PlayerStreakProperties implements Listener {
                     StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
                     plugin.getStreakCache().load(uuid, streakProperties);
 
-                    if (plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
-                        plugin.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s streak cache was loaded.");
+                    if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())){
+                        plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s streak cache was loaded.");
                     }
                 }, 2L);
             }
@@ -65,28 +65,28 @@ public class PlayerStreakProperties implements Listener {
                 StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
                 plugin.getStreakCache().load(uuid, streakProperties);
 
-                if (plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
-                    plugin.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s streak cache was loaded.");
+                if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())){
+                    plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s streak cache was loaded.");
                 }
             }, 2L);
         }
     }
 
 
-    /*
+    /**
      * Saves and clears cache when player exits.
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onQuit(PlayerQuitEvent e) {
+    public void onQuit(PlayerQuitEvent event) {
 
-        if (!plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())) return;
+        if (!plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) return;
 
-        StreakProperties streakProperties = plugin.getStreakCache().get(e.getPlayer().getUniqueId());
+        StreakProperties streakProperties = plugin.getStreakCache().get(event.getPlayer().getUniqueId());
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> plugin.getDatabaseManager().saveStreakProperties(streakProperties));
-        plugin.getStreakCache().destroy(e.getPlayer().getUniqueId());
+        plugin.getStreakCache().destroy(event.getPlayer().getUniqueId());
 
-        if (!plugin.getStreakCache().isInCache(e.getPlayer().getUniqueId())){
-            plugin.debug("Successfully " + e.getEventName() + ". " + e.getPlayer().getName() + "'s profile cache was saved and destroyed.");
+        if (!plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())){
+            plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s profile cache was saved and destroyed.");
         }
     }
 }

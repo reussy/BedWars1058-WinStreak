@@ -3,13 +3,14 @@ package com.reussy.exodus.winstreak.cache;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class StreakCache {
 
     private final Map<UUID, StreakProperties> cache;
 
     public StreakCache() {
-        this.cache = new HashMap<>();
+        this.cache = new ConcurrentHashMap<>();
     }
 
     public void load(UUID uuid, StreakProperties streakProperties) {
@@ -28,7 +29,7 @@ public class StreakCache {
 
     public StreakProperties get(UUID uuid) {
 
-        StreakProperties streakProperties = cache.get(uuid);
+        StreakProperties streakProperties = cache.getOrDefault(uuid, new StreakProperties(uuid));
 
         if (streakProperties == null) {
             throw new IllegalStateException("[BW1058-WinStreak DEBUG]: The streak cache for " + uuid.toString() + " is null!");

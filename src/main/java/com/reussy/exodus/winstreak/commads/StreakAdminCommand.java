@@ -60,14 +60,14 @@ public class StreakAdminCommand extends BukkitCommand {
 
             case "add":
 
-                if (args.length < 3){
+                if (args.length < 3) {
                     sendHelpMessage(player);
                     return true;
                 }
 
                 try {
 
-                    if (Integer.parseInt(args[2]) < 0){
+                    if (Integer.parseInt(args[2]) < 0) {
                         plugin.getMessageUtils().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
                                 .replace("{NUMBER}", args[2]));
                         return true;
@@ -91,14 +91,14 @@ public class StreakAdminCommand extends BukkitCommand {
 
             case "remove":
 
-                if (args.length < 3){
+                if (args.length < 3) {
                     sendHelpMessage(player);
                     return true;
                 }
 
                 try {
 
-                    if (Integer.parseInt(args[2]) < 0){
+                    if (Integer.parseInt(args[2]) < 0) {
                         plugin.getMessageUtils().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
                                 .replace("{NUMBER}", args[2]));
                         return true;
@@ -124,14 +124,14 @@ public class StreakAdminCommand extends BukkitCommand {
 
             case "set":
 
-                if (args.length < 3){
+                if (args.length < 3) {
                     sendHelpMessage(player);
                     return true;
                 }
 
                 try {
 
-                    if (Integer.parseInt(args[2]) < 0){
+                    if (Integer.parseInt(args[2]) < 0) {
                         plugin.getMessageUtils().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
                                 .replace("{NUMBER}", args[2]));
                         return true;
@@ -142,7 +142,8 @@ public class StreakAdminCommand extends BukkitCommand {
                             .replace("{PLAYER}", target.getName())
                             .replace("{WIN_STREAK}", String.valueOf(streakProperties.getStreak())));
 
-                    if (streakProperties.getStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getStreak());
+                    if (streakProperties.getStreak() > streakProperties.getBestStreak())
+                        streakProperties.setBestStreak(streakProperties.getStreak());
                 } catch (NumberFormatException e) {
                     plugin.getMessageUtils().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
                             .replace("{NUMBER}", args[2]));
@@ -170,7 +171,7 @@ public class StreakAdminCommand extends BukkitCommand {
         return textComponent;
     }
 
-    private void sendHelpMessage(Player player){
+    private void sendHelpMessage(Player player) {
         plugin.getMessageUtils().send(player, "&8&lþ &6BedWars1058 Win Streak v" + plugin.getDescription().getVersion() + " &7- &cAdmin Commands");
         player.sendMessage(" ");
         player.spigot().sendMessage(textComponentBuilder(" &6▪ &7/ws add <player> <amount> &8- &eAdd more streak to a player", "/ws add", "Add more streak to a player"));

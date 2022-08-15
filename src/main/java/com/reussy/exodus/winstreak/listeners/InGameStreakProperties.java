@@ -37,7 +37,8 @@ public class InGameStreakProperties implements Listener {
             StreakProperties streakProperties = plugin.getStreakCache().get(player.getUniqueId());
             streakProperties.setStreak(streakProperties.getStreak() + 1);
 
-            if (streakProperties.getStreak() > streakProperties.getBestStreak()) streakProperties.setBestStreak(streakProperties.getStreak());
+            if (streakProperties.getStreak() > streakProperties.getBestStreak())
+                streakProperties.setBestStreak(streakProperties.getStreak());
         });
     }
 

@@ -34,13 +34,13 @@ public class PlayerStreakProperties implements Listener {
             /*
              * This condition handles the MULTI_ARENA and SHARED servers, we do not need to delay the loading of the cache.
              */
-            if (plugin.getBedWarsAPI().getServerType() == ServerType.MULTIARENA || plugin.getBedWarsAPI().getServerType() == ServerType.SHARED){
+            if (plugin.getBedWarsAPI().getServerType() == ServerType.MULTIARENA || plugin.getBedWarsAPI().getServerType() == ServerType.SHARED) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                     plugin.getStreakCache().destroy(uuid);
                     StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
                     plugin.getStreakCache().load(uuid, streakProperties);
 
-                    if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())){
+                    if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) {
                         plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s streak cache was loaded.");
                     }
                 });
@@ -48,24 +48,24 @@ public class PlayerStreakProperties implements Listener {
                 /*
                  * This condition handles the BUNGEE servers and if necessary delay the loading of the cache to synchronize with the arena servers.
                  */
-            } else if (plugin.getBedWarsAPI().getServerType() == ServerType.BUNGEE){
+            } else if (plugin.getBedWarsAPI().getServerType() == ServerType.BUNGEE) {
                 Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
                     plugin.getStreakCache().destroy(uuid);
                     StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
                     plugin.getStreakCache().load(uuid, streakProperties);
 
-                    if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())){
+                    if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) {
                         plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s streak cache was loaded.");
                     }
                 }, 2L);
             }
-        } else if (plugin.isBedWarsProxyPresent()){
+        } else if (plugin.isBedWarsProxyPresent()) {
             Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
                 plugin.getStreakCache().destroy(uuid);
                 StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
                 plugin.getStreakCache().load(uuid, streakProperties);
 
-                if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())){
+                if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) {
                     plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s streak cache was loaded.");
                 }
             }, 2L);
@@ -85,7 +85,7 @@ public class PlayerStreakProperties implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> plugin.getDatabaseManager().saveStreakProperties(streakProperties));
         plugin.getStreakCache().destroy(event.getPlayer().getUniqueId());
 
-        if (!plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())){
+        if (!plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) {
             plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s profile cache was saved and destroyed.");
         }
     }

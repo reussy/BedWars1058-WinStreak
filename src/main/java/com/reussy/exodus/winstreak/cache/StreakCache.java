@@ -1,6 +1,5 @@
 package com.reussy.exodus.winstreak.cache;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,7 +31,7 @@ public class StreakCache {
         return cache.get(uuid);
     }
 
-    public boolean isInCache(UUID uuid){
+    public boolean isInCache(UUID uuid) {
 
         if (uuid == null) return false;
 

@@ -55,7 +55,8 @@ public class MySQL implements DatabaseManager {
         hikariConfig.setUsername(username);
         hikariConfig.setPassword(password);
         hikariConfig.addDataSourceProperty("useSSL", String.valueOf(ssl));
-        if (!certificateVerification) hikariConfig.addDataSourceProperty("verifyServerCertificate", String.valueOf(false));
+        if (!certificateVerification)
+            hikariConfig.addDataSourceProperty("verifyServerCertificate", String.valueOf(false));
         hikariConfig.addDataSourceProperty("characterEncoding", "utf8");
         hikariConfig.addDataSourceProperty("encoding", "UTF-8");
         hikariConfig.addDataSourceProperty("useUnicode", "true");

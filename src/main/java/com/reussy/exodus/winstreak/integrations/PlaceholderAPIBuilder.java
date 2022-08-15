@@ -55,7 +55,7 @@ public class PlaceholderAPIBuilder extends PlaceholderExpansion {
 
         if (player == null) return "";
 
-        if (!plugin.getStreakCache().isInCache(player.getUniqueId())){
+        if (!plugin.getStreakCache().isInCache(player.getUniqueId())) {
             return "";
         }
 

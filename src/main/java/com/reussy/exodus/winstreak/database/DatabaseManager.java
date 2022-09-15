@@ -8,6 +8,8 @@ public interface DatabaseManager {
 
     void initializeTable();
 
+    void close();
+
     boolean hasStreakProfile(UUID uuid);
 
     StreakProperties initializeStreakProperties(UUID uuid);

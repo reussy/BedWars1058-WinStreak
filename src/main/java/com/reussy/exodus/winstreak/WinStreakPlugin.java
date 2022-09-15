@@ -63,8 +63,10 @@ public class WinStreakPlugin extends JavaPlugin {
         //Perform a task for save currently progress in case of any crash or similar
         for (Player player : Bukkit.getOnlinePlayers()) {
             StreakProperties streakProperties = getStreakCache().get(player.getUniqueId());
-            getDatabaseManager().saveStreakProperties(streakProperties);
+            this.getDatabaseManager().saveStreakProperties(streakProperties);
         }
+
+        this.getDatabaseManager().close();
     }
 
     public boolean isBedWars1058Present() {

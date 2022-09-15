@@ -91,6 +91,11 @@ public class MySQL implements DatabaseManager {
     }
 
     @Override
+    public void close() {
+        hikariDataSource.close();
+    }
+
+    @Override
     public boolean hasStreakProfile(UUID uuid) {
 
         String select = "SELECT uuid FROM bw1058_winstreak WHERE uuid = ?;";

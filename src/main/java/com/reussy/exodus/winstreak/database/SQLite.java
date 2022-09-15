@@ -50,6 +50,16 @@ public class SQLite implements DatabaseManager {
     }
 
     @Override
+    public void close() {
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public boolean hasStreakProfile(UUID uuid) {
 
         String select = "SELECT uuid FROM `bw1058_winstreak` WHERE uuid = ?;";

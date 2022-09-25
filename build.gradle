@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.reussy.exodus'
-version = '1.1.2'
+version = '1.2.0'
 description = 'BedWars1058-WinStreak'
 
 repositories {
@@ -25,16 +25,15 @@ repositories {
 dependencies {
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
     implementation 'com.zaxxer:HikariCP:5.0.1'
-    implementation 'org.slf4j:slf4j-simple:1.7.36'
+    implementation 'org.slf4j:slf4j-simple:2.0.0'
     implementation 'org.jetbrains:annotations:23.0.0'
+    implementation files('libs/json-20180813.jar')
 
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
     compileOnly 'com.andrei1058.bedwars:bedwars-api:22.3.4'
     compileOnly 'me.clip:placeholderapi:2.11.1'
+    compileOnly 'com.google.code.gson:gson:2.9.0'
 }
-
-sourceCompatibility = 11
-targetCompatibility = 11
 
 compileJava {
     options.encoding = 'UTF-8'
@@ -66,5 +65,8 @@ jar {
 }
 
 shadowJar {
+    archiveBaseName.set('BedWars1058-WinStreak')
+    archiveClassifier.set('')
     relocate "com.zaxxer.hikari", "com.reussy.exodus.libs.hikari"
+    minimize()
 }

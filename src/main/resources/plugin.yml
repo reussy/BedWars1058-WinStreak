@@ -1,6 +1,6 @@
 name: BedWars1058-WinStreak
 version: ${version}
-main: com.reussy.exodus.winstreak.WinStreakPlugin
+main: com.reussy.exodus.winstreak.plugin.WinStreakPlugin
 softdepend: [ BedWars1058, BedWarsProxy, PlaceholderAPI ]
 authors: [ reussy ]
 api-version: 1.13

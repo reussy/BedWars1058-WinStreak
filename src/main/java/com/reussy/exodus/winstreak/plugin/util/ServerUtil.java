@@ -1,9 +1,10 @@
-package com.reussy.exodus.winstreak.utils;
+package com.reussy.exodus.winstreak.plugin.util;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * @author Ricardo (reussy)
  */
 
-public class MessageUtils {
+public class ServerUtil {
 
     /**
      * Add color to the message given.
@@ -75,6 +76,16 @@ public class MessageUtils {
     }
 
     /**
+     * Send a colorized message to console.
+     *
+     * @param message The message to send.
+     */
+    public void send(String message) {
+        if (message == null) return;
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    }
+
+    /**
      * Send a colorized message to the player list.
      *
      * @param players The list of player's related.
@@ -83,4 +94,5 @@ public class MessageUtils {
     public void send(List<Player> players, String message) {
         players.forEach(player -> send(player, message));
     }
+
 }

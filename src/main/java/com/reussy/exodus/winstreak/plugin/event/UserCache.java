@@ -1,8 +1,9 @@
-package com.reussy.exodus.winstreak.listeners;
+package com.reussy.exodus.winstreak.plugin.event;
 
 import com.andrei1058.bedwars.api.server.ServerType;
-import com.reussy.exodus.winstreak.WinStreakPlugin;
-import com.reussy.exodus.winstreak.cache.StreakProperties;
+import com.reussy.exodus.winstreak.api.user.IUser;
+import com.reussy.exodus.winstreak.plugin.WinStreakPlugin;
+import com.reussy.exodus.winstreak.plugin.repository.UserRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,11 +13,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
 
-public class PlayerStreakProperties implements Listener {
+public class UserCache implements Listener {
 
     private final WinStreakPlugin plugin;
 
-    public PlayerStreakProperties(WinStreakPlugin plugin) {
+    public UserCache(WinStreakPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -24,7 +25,7 @@ public class PlayerStreakProperties implements Listener {
      * This method loads the cache when the player logs in to the server.
      * It also takes care of verifying what type of server your BedWars is running.
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent event) {
 
         UUID uuid = event.getPlayer().getUniqueId();
@@ -36,11 +37,11 @@ public class PlayerStreakProperties implements Listener {
              */
             if (plugin.getBedWarsAPI().getServerType() == ServerType.MULTIARENA || plugin.getBedWarsAPI().getServerType() == ServerType.SHARED) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                    plugin.getStreakCache().destroy(uuid);
-                    StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
-                    plugin.getStreakCache().load(uuid, streakProperties);
+                    UserRepository.getInstance().removeUser(uuid);
+                    IUser user = plugin.getDatabaseManager().getUser(uuid);
+                    UserRepository.getInstance().saveUser(user);
 
-                    if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) {
+                    if (plugin.getAPI().getUserUtil().getUsers().containsKey(uuid)) {
                         plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s streak cache was loaded.");
                     }
                 });
@@ -50,22 +51,22 @@ public class PlayerStreakProperties implements Listener {
                  */
             } else if (plugin.getBedWarsAPI().getServerType() == ServerType.BUNGEE) {
                 Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-                    plugin.getStreakCache().destroy(uuid);
-                    StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
-                    plugin.getStreakCache().load(uuid, streakProperties);
+                    UserRepository.getInstance().removeUser(uuid);
+                    IUser user = plugin.getDatabaseManager().getUser(uuid);
+                    UserRepository.getInstance().saveUser(user);
 
-                    if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) {
+                    if (plugin.getAPI().getUserUtil().getUsers().containsKey(uuid)) {
                         plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s streak cache was loaded.");
                     }
                 }, 2L);
             }
         } else if (plugin.isBedWarsProxyPresent()) {
             Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-                plugin.getStreakCache().destroy(uuid);
-                StreakProperties streakProperties = plugin.getDatabaseManager().initializeStreakProperties(uuid);
-                plugin.getStreakCache().load(uuid, streakProperties);
+                UserRepository.getInstance().removeUser(uuid);
+                IUser user = plugin.getDatabaseManager().getUser(uuid);
+                UserRepository.getInstance().saveUser(user);
 
-                if (plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) {
+                if (plugin.getAPI().getUserUtil().getUsers().containsKey(uuid)) {
                     plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s streak cache was loaded.");
                 }
             }, 2L);
@@ -76,16 +77,19 @@ public class PlayerStreakProperties implements Listener {
     /**
      * Saves and clears cache when player exits.
      */
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent event) {
 
-        if (!plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) return;
+        if (!plugin.getAPI().getUserUtil().getUsers().containsKey(event.getPlayer().getUniqueId())) return;
 
-        StreakProperties streakProperties = plugin.getStreakCache().get(event.getPlayer().getUniqueId());
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> plugin.getDatabaseManager().saveStreakProperties(streakProperties));
-        plugin.getStreakCache().destroy(event.getPlayer().getUniqueId());
+        IUser user = plugin.getAPI().getUserUtil().getUser(event.getPlayer().getUniqueId());
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            if (plugin.getDatabaseManager().saveUser(user)) {
+                UserRepository.getInstance().removeUser(event.getPlayer().getUniqueId());
+            }
+        });
 
-        if (!plugin.getStreakCache().isInCache(event.getPlayer().getUniqueId())) {
+        if (!plugin.getAPI().getUserUtil().getUsers().containsKey(event.getPlayer().getUniqueId())) {
             plugin.debug("Successfully " + event.getEventName() + ". " + event.getPlayer().getName() + "'s profile cache was saved and destroyed.");
         }
     }

@@ -1,22 +1,21 @@
-package com.reussy.exodus.winstreak.configuration;
+package com.reussy.exodus.winstreak.plugin.config;
 
 import com.andrei1058.bedwars.api.language.Language;
-import com.reussy.exodus.winstreak.WinStreakPlugin;
+import com.reussy.exodus.winstreak.plugin.WinStreakPlugin;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
 
-public class FilesManager {
+public class PluginConfiguration {
 
     private final WinStreakPlugin plugin;
-    File configFile;
-    YamlConfiguration configYaml;
+    private File configFile;
+    private YamlConfiguration configYaml;
 
-    public FilesManager(WinStreakPlugin plugin) throws IOException {
+    public PluginConfiguration(WinStreakPlugin plugin) {
         this.plugin = plugin;
 
         if (plugin.isBedWars1058Present()) {
@@ -25,7 +24,12 @@ public class FilesManager {
 
             createFile();
             addConfigPaths();
-            addLanguagePaths();
+
+            try {
+                addLanguagePaths();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         } else if (plugin.isBedWarsProxyPresent()) {
 
@@ -34,7 +38,11 @@ public class FilesManager {
 
             createFile();
             addConfigPaths();
-            addLanguagePaths();
+            try {
+                addLanguagePaths();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
     }
@@ -53,9 +61,6 @@ public class FilesManager {
 
         configYaml.options().header("BedWars1058-WinStreak Configuration File\nBe careful when edit the configuration\nYAML Parser: https://yamlchecker.com");
         configYaml.addDefault("general.debug", true);
-        if (Bukkit.getPluginManager().getPlugin("BedWars1058-PrivateGames") != null) {
-            configYaml.addDefault("general.enable-streak-in-private-games", true);
-        }
         configYaml.options().copyDefaults(true);
         savePluginConfig();
     }

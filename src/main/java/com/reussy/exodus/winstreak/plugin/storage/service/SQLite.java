@@ -1,14 +1,16 @@
-package com.reussy.exodus.winstreak.database;
+package com.reussy.exodus.winstreak.plugin.storage.service;
 
-import com.reussy.exodus.winstreak.WinStreakPlugin;
-import com.reussy.exodus.winstreak.cache.StreakProperties;
+import com.reussy.exodus.winstreak.api.user.IUser;
+import com.reussy.exodus.winstreak.plugin.WinStreakPlugin;
+import com.reussy.exodus.winstreak.plugin.repository.User;
+import com.reussy.exodus.winstreak.plugin.storage.IStorage;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.UUID;
 
-public class SQLite implements DatabaseManager {
+public class SQLite implements IStorage {
 
     private final String url;
     private Connection connection;
@@ -60,7 +62,7 @@ public class SQLite implements DatabaseManager {
     }
 
     @Override
-    public boolean hasStreakProfile(UUID uuid) {
+    public boolean isUser(UUID uuid) {
 
         String select = "SELECT uuid FROM `bw1058_winstreak` WHERE uuid = ?;";
         try {
@@ -78,16 +80,15 @@ public class SQLite implements DatabaseManager {
     }
 
     @Override
-    public StreakProperties initializeStreakProperties(UUID uuid) {
+    public IUser getUser(UUID uuid) {
 
-        StreakProperties streakProperties = new StreakProperties(uuid);
+        IUser user = new User(uuid);
         String select = "SELECT current_streak, best_streak FROM `bw1058_winstreak` WHERE uuid = ?;";
 
-        if (!hasStreakProfile(uuid)) {
-
-            streakProperties.setStreak(0);
-            streakProperties.setBestStreak(0);
-            return streakProperties;
+        if (!isUser(uuid)) {
+            user.setStreak(0);
+            user.setBestStreak(0);
+            return user;
         }
 
         try {
@@ -96,44 +97,48 @@ public class SQLite implements DatabaseManager {
                 statement.setString(1, uuid.toString());
                 try (ResultSet result = statement.executeQuery()) {
                     if (result.next()) {
-                        streakProperties.setStreak(result.getInt("current_streak"));
-                        streakProperties.setBestStreak(result.getInt("best_streak"));
+                        user.setStreak(result.getInt("current_streak"));
+                        user.setBestStreak(result.getInt("best_streak"));
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return streakProperties;
+        return user;
     }
 
     @Override
-    public void saveStreakProperties(StreakProperties streakProperties) {
+    public boolean saveUser(IUser user) {
 
         String s;
         try {
             isClosed();
 
-            if (hasStreakProfile(streakProperties.getUUID())) {
+            if (isUser(user.getUUID())) {
                 s = "UPDATE `bw1058_winstreak` SET current_streak=?, best_streak=? WHERE uuid=?;";
                 try (PreparedStatement statement = connection.prepareStatement(s)) {
-                    statement.setInt(1, streakProperties.getStreak());
-                    statement.setInt(2, streakProperties.getBestStreak());
-                    statement.setString(3, streakProperties.getUUID().toString());
+                    statement.setInt(1, user.getStreak());
+                    statement.setInt(2, user.getBestStreak());
+                    statement.setString(3, user.getUUID().toString());
                     statement.executeUpdate();
+                    return true;
                 }
+
             } else {
                 s = "INSERT INTO `bw1058_winstreak` (uuid, current_streak, best_streak) VALUES (?,?,?);";
                 try (PreparedStatement statement = connection.prepareStatement(s)) {
-                    statement.setString(1, streakProperties.getUUID().toString());
-                    statement.setInt(2, streakProperties.getStreak());
-                    statement.setInt(3, streakProperties.getBestStreak());
+                    statement.setString(1, user.getUUID().toString());
+                    statement.setInt(2, user.getStreak());
+                    statement.setInt(3, user.getBestStreak());
                     statement.executeUpdate();
+                    return true;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     private void isClosed() throws SQLException {

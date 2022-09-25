@@ -8,6 +8,9 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
 group = 'com.reussy.exodus'
 version = '1.2.0'
 description = 'BedWars1058-WinStreak'
@@ -44,6 +47,21 @@ javadoc {
     options.addStringOption('Xdoclint:none', '-quiet')
     options.addStringOption('encoding', 'UTF-8')
     options.addStringOption('charSet', 'UTF-8')
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.reussy.exodus'
+            artifactId = 'BedWars1058-WinStreak'
+            version = "1.2.0"
+            from components.java
+
+            pom {
+                description = 'WinStreak for BedWars1058'
+            }
+        }
+    }
 }
 
 publishing {

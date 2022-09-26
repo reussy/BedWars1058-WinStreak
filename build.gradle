@@ -7,6 +7,11 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
+compileJava.options.encoding = 'UTF-8'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
 group = 'com.reussy.exodus'
 version = '2.0.0'
 
@@ -26,7 +31,6 @@ dependencies {
     implementation 'com.zaxxer:HikariCP:5.0.1'
     implementation 'org.slf4j:slf4j-simple:2.0.0'
     implementation 'org.jetbrains:annotations:23.0.0'
-    implementation files('libs/json-20180813.jar')
 
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
     compileOnly 'com.andrei1058.bedwars:bedwars-api:22.3.4'
@@ -34,16 +38,8 @@ dependencies {
     compileOnly 'com.google.code.gson:gson:2.9.0'
 }
 
-compileJava {
+tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
-        }
-    }
 }
 
 shadowJar {
@@ -52,4 +48,12 @@ shadowJar {
     relocate "org.slf4j", "com.reussy.exodus.libs.slf4j"
     relocate "com.zaxxer.hikari", "com.reussy.exodus.libs.hikari"
     minimize()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }

@@ -1,58 +1,9 @@
 plugins {
-    id 'java'
-    id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+id 'groovy'
 }
-
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = 'com.reussy.exodus'
+group = 'com.reussy.development'
 version = '2.0.0'
-
-repositories {
-    mavenCentral()
-    maven { url 'https://papermc.io/repo/repository/maven-public/' }
-    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url = 'https://oss.sonatype.org/content/groups/public/' }
-    maven { url = 'https://repo.andrei1058.dev/releases/' }
-    maven { url = 'https://jitpack.io' }
-    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-    maven { url = 'https://repo.maven.apache.org/maven2/' }
-}
-
-dependencies {
-    // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
-    compileOnly 'com.zaxxer:HikariCP:5.0.1'
-    implementation 'org.slf4j:slf4j-simple:2.0.0'
-    implementation 'org.jetbrains:annotations:23.0.0'
-
-    compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
-    compileOnly 'com.andrei1058.bedwars:bedwars-api:22.3.4'
-    compileOnly 'me.clip:placeholderapi:2.11.1'
-    compileOnly 'com.google.code.gson:gson:2.9.0'
-}
-
-shadowJar {
-    archiveBaseName.set('BedWars1058-WinStreak')
-    archiveClassifier.set('')
-    relocate "org.slf4j", "com.reussy.exodus.libs.slf4j"
-    relocate "com.zaxxer.hikari", "com.reussy.exodus.libs.hikari"
-    minimize()
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = 'com.reussy.exodus'
-            artifactId = 'BedWars1058-WinStreak'
-            version = '2.0.0'
-
-            from components.java
-        }
-    }
-}

@@ -9,3 +9,6 @@ pluginManagement {
 }
 
 rootProject.name = 'BedWars1058-WinStreak'
+include 'WinStreak-API'
+include 'WinStreak-Bukkit'
+

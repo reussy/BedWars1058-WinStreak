@@ -9,10 +9,10 @@ apply plugin: 'maven-publish'
 
 group = 'com.reussy.exodus'
 version = '1.2.0'
-description = 'BedWars1058-WinStreak'
 
 repositories {
     mavenCentral()
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url = 'https://oss.sonatype.org/content/groups/public/' }
     maven { url = 'https://repo.andrei1058.dev/releases/' }
@@ -45,33 +45,10 @@ javadoc {
     options.addStringOption('charSet', 'UTF-8')
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.reussy.exodus'
-            artifactId = 'BedWars1058-WinStreak'
-            version = "1.2.0"
-            from components.java
-
-            pom {
-                description = 'WinStreak for BedWars1058'
-            }
-        }
-    }
-}
-
-jar {
-    dependsOn configurations.runtimeClasspath
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archivesBaseName = rootProject.name
-    from {
-        configurations.runtimeClasspath.findAll { File file -> file.name.endsWith('jar') }.collect { zipTree(it) }
-    }
-}
-
 shadowJar {
     archiveBaseName.set('BedWars1058-WinStreak')
     archiveClassifier.set('')
+    relocate "org.slf4j", "com.reussy.exodus.libs.slf4j"
     relocate "com.zaxxer.hikari", "com.reussy.exodus.libs.hikari"
     minimize()
 }

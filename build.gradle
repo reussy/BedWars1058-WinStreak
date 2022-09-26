@@ -6,8 +6,7 @@ plugins {
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
-
-compileJava.options.encoding = 'UTF-8'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -36,10 +35,6 @@ dependencies {
     compileOnly 'com.andrei1058.bedwars:bedwars-api:22.3.4'
     compileOnly 'me.clip:placeholderapi:2.11.1'
     compileOnly 'com.google.code.gson:gson:2.9.0'
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
 }
 
 shadowJar {

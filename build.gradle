@@ -46,11 +46,6 @@ publishing {
     }
 }
 
-wrapper {
-    gradleVersion = "7.3.3"
-    distributionType = Wrapper.DistributionType.ALL
-}
-
 shadowJar {
     archiveBaseName.set('BedWars1058-WinStreak')
     archiveClassifier.set('')

@@ -1,6 +1,10 @@
 plugins {
-id 'groovy'
+    id 'groovy'
+    id 'maven-publish'
 }
+
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

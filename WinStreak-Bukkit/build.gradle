@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+group 'com.reussy.development'
+version '2.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url = 'https://repo.andrei1058.dev/releases/' }
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url = 'https://repo.maven.apache.org/maven2/' }
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
+
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+    implementation 'org.slf4j:slf4j-simple:2.0.0'
+    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation(project(':WinStreak-API'))
+
+    compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+    compileOnly 'com.andrei1058.bedwars:bedwars-api:22.3.4'
+    compileOnly 'me.clip:placeholderapi:2.11.1'
+}
+
+shadowJar {
+    archiveBaseName.set('BedWars1058-WinStreak')
+    archiveClassifier.set('')
+    relocate "org.jetbrains", "com.reussy.development.libs.annotations"
+    relocate "org.slf4j", "com.reussy.development.libs.slf4j"
+    relocate "com.zaxxer.hikari", "com.reussy.development.libs.hikari"
+    minimize()
+}
+
+test {
+    useJUnitPlatform()
+}

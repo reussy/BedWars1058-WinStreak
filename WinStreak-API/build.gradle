@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+group 'com.reussy.development'
+version '2.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'com.reussy.development'
+            artifactId = 'WinStreak-API'
+            version = '2.0.0'
+
+            from components.java
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,5 +1,3 @@
-![Iwinstreak-logo](https://i.imgur.com/XPBkZkm.png)
-
 ![forks](https://img.shields.io/github/forks/reussy/BedWars1058-WinStreak?color=yellow&style=for-the-badge&logo=github) ![discord-online](https://img.shields.io/discord/871270710214000681?color=blue&logo=discord&label=DISCORD&style=for-the-badge) ![code-quality](https://img.shields.io/codacy/grade/1e1dc3fdb98c43a796424b2c4ed71e98?style=for-the-badge&logo=codacy)
 
 ## Information

@@ -27,6 +27,7 @@ public class SQLite implements IStorage {
             }
 
         this.url = "jdbc:sqlite:" + database;
+        initializeTable();
         try {
             Class.forName("org.sqlite.JDBC");
             DriverManager.getConnection(url);

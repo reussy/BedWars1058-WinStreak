@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
@@ -31,7 +33,8 @@ dependencies {
 }
 
 shadowJar {
-    archiveBaseName.set('BedWars1058-WinStreak')
+    final String archiveName = parent.name + " " + project.property("version") + '.jar'
+    getArchiveFileName().set(archiveName)
     archiveClassifier.set('')
     relocate "org.jetbrains", "com.reussy.development.libs.annotations"
     relocate "org.slf4j", "com.reussy.development.libs.slf4j"
@@ -39,6 +42,15 @@ shadowJar {
     minimize()
 }
 
-test {
-    useJUnitPlatform()
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+
+    filter ReplaceTokens, tokens: [
+            "version"     : project.property("version"),
+    ]
 }

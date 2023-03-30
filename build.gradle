@@ -4,8 +4,5 @@ plugins {
 
 apply plugin: 'groovy'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 group = 'com.reussy.development'
 version = '2.0.0'

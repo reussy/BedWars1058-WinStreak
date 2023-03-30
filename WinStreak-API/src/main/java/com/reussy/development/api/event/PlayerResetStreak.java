@@ -4,6 +4,7 @@ import com.reussy.development.api.user.IUser;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Called when a player's streak is reset to 0.
@@ -40,7 +41,7 @@ public class PlayerResetStreak extends Event implements Cancellable {
      * @return the streak before it was reset.
      */
     public int getStreak() {
-        return getStreak();
+        return streak;
     }
 
     /**
@@ -65,7 +66,7 @@ public class PlayerResetStreak extends Event implements Cancellable {
         cancelled = cancel;
     }
 
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 

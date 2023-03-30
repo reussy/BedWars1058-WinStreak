@@ -95,7 +95,6 @@ public class WinStreakPlugin extends JavaPlugin {
 
         if (isBedWars1058Present()) {
             this.IStorage = getBedWarsAPI().getConfigs().getMainConfig().getBoolean("database.enable") ? new MySQL(this) : new SQLite(this);
-            this.IStorage.initializeTable();
         } else if (isBedWarsProxyPresent()) {
             File proxyConfig = new File("plugins/BedWarsProxy/config.yml");
             YamlConfiguration configYaml = YamlConfiguration.loadConfiguration(proxyConfig);

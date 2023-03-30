@@ -1,5 +1,5 @@
 name: BedWars1058-WinStreak
-version: 2.0.0
+version: @version@
 main: com.reussy.development.plugin.WinStreakPlugin
 soft depend: [ BedWars1058, BedWarsProxy, PlaceholderAPI ]
 authors: [ reussy ]

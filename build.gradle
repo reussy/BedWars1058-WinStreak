@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id 'groovy'
 }
@@ -6,3 +8,20 @@ apply plugin: 'groovy'
 
 group = 'com.reussy.development'
 version = '2.0.0'
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+
+    filter ReplaceTokens, tokens: [
+            "version"     : project.property("version"),
+    ]
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

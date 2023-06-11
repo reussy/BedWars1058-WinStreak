@@ -2,16 +2,17 @@ package com.reussy.development.plugin.integration;
 
 import com.reussy.development.api.user.IUser;
 import com.reussy.development.plugin.WinStreakPlugin;
+import com.reussy.development.plugin.util.DebugUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-public class PlaceholderAPI extends PlaceholderExpansion implements IPluginIntegration {
+public class PAPI extends PlaceholderExpansion implements IPluginIntegration {
 
     private final WinStreakPlugin plugin;
 
-    public PlaceholderAPI(WinStreakPlugin plugin) {
+    public PAPI(WinStreakPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -20,7 +21,7 @@ public class PlaceholderAPI extends PlaceholderExpansion implements IPluginInteg
      */
     @Override
     public boolean isRunning() {
-        return enable();
+        return isPresent() && isEnabled();
     }
 
     /**
@@ -47,11 +48,11 @@ public class PlaceholderAPI extends PlaceholderExpansion implements IPluginInteg
 
         if (isPresent()) {
             if (register()) {
-                plugin.getServerUtil().send("  &fPlaceholderAPI &7has been enabled and hooked into WinStreak add-on.");
+                DebugUtil.printBukkit("&7Successfully loaded &9PlaceholderAPI &7integration, registering expansion...");
                 return true;
             }
         } else {
-            plugin.getServerUtil().send("  &fPlaceholderAPI is required and it's not present!");
+            DebugUtil.printBukkit("&9PlaceholderAPI &4is required and it's not present!");
             Bukkit.getPluginManager().disablePlugin(plugin);
         }
 

@@ -2,6 +2,7 @@ package com.reussy.development.plugin.command;
 
 import com.reussy.development.api.user.IUser;
 import com.reussy.development.plugin.WinStreakPlugin;
+import com.reussy.development.plugin.util.PluginUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
@@ -32,10 +33,10 @@ public class StreakCommandProxy extends BukkitCommand {
         IUser user = plugin.getAPI().getUserUtil().getUser(player.getUniqueId());
 
         if (args.length > 0 && "-best".equals(args[0])) {
-            plugin.getServerUtil().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
+            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
                     .replace("{BEST_STREAK}", String.valueOf(user.getBestStreak())));
         } else {
-            plugin.getServerUtil().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
+            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
                     .replace("{STREAK}", String.valueOf(user.getStreak())));
         }
 

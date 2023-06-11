@@ -91,7 +91,7 @@ public class UserInGame implements Listener {
 
         if (event.getArena().getStatus() != GameState.playing) return;
 
-        if (!plugin.getBedWarsAPI().getArenaUtil().isPlaying(victim)) return;
+        if (!plugin.getBedWarsIntegration().get().getArenaUtil().isPlaying(victim)) return;
 
         if (victim == null || !event.getCause().isFinalKill()) return;
 
@@ -162,6 +162,6 @@ public class UserInGame implements Listener {
             leavingPlayers.remove(uuid);
             rejoinTasks.remove(uuid);
             plugin.debug("The win streak of " + Bukkit.getPlayer(uuid).getName() + " has been reset because he didn't rejoin in time.");
-        }, plugin.getBedWarsAPI().getConfigs().getMainConfig().getInt(ConfigPath.GENERAL_CONFIGURATION_REJOIN_TIME) * 20L);
+        }, plugin.getBedWarsIntegration().get().getConfigs().getMainConfig().getInt(ConfigPath.GENERAL_CONFIGURATION_REJOIN_TIME) * 20L);
     }
 }

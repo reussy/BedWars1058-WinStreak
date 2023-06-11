@@ -1,22 +1,17 @@
 package com.reussy.development.plugin.integration;
 
 import com.reussy.development.plugin.WinStreakPlugin;
+import com.reussy.development.plugin.util.DebugUtil;
 import org.bukkit.Bukkit;
 
 public class BWProxy implements IPluginIntegration {
-
-    private final WinStreakPlugin plugin;
-
-    public BWProxy(WinStreakPlugin plugin) {
-        this.plugin = plugin;
-    }
 
     /**
      * @return true If this plugin was hooked successfully, otherwise false.
      */
     @Override
     public boolean isRunning() {
-        return enable();
+        return isPresent() && isEnabled();
     }
 
     /**
@@ -41,7 +36,7 @@ public class BWProxy implements IPluginIntegration {
     @Override
     public boolean enable() {
         if (isPresent()) {
-            plugin.getServerUtil().send("  &fBedWarsProxy &7has been enabled and hooked into WinStreak add-on.");
+            DebugUtil.printBukkit("&7Using &aBedWarsProxy &7as Bed Wars core.");
             return true;
         }
 

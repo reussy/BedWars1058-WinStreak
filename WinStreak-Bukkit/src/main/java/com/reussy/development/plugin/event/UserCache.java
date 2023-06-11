@@ -35,7 +35,7 @@ public class UserCache implements Listener {
             /*
              * This condition handles the MULTI_ARENA and SHARED servers, we do not need to delay the loading of the cache.
              */
-            if (plugin.getBedWarsAPI().getServerType() == ServerType.MULTIARENA || plugin.getBedWarsAPI().getServerType() == ServerType.SHARED) {
+            if (plugin.getBedWarsIntegration().get().getServerType() == ServerType.MULTIARENA || plugin.getBedWarsIntegration().get().getServerType() == ServerType.SHARED) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                     UserRepository.getInstance().removeUser(uuid);
                     IUser user = plugin.getDatabaseManager().getUser(uuid);
@@ -49,7 +49,7 @@ public class UserCache implements Listener {
                 /*
                  * This condition handles the BUNGEE servers and if necessary delay the loading of the cache to synchronize with the arena servers.
                  */
-            } else if (plugin.getBedWarsAPI().getServerType() == ServerType.BUNGEE) {
+            } else if (plugin.getBedWarsIntegration().get().getServerType() == ServerType.BUNGEE) {
                 Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
                     UserRepository.getInstance().removeUser(uuid);
                     IUser user = plugin.getDatabaseManager().getUser(uuid);

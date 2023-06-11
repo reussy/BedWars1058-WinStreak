@@ -6,6 +6,7 @@ import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.language.Messages;
 import com.reussy.development.api.user.IUser;
 import com.reussy.development.plugin.WinStreakPlugin;
+import com.reussy.development.plugin.util.PluginUtil;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -32,13 +33,13 @@ public class StreakCommand extends SubCommand {
     public boolean execute(String[] args, CommandSender commandSender) {
 
         if (!(commandSender instanceof Player)) {
-            Bukkit.getConsoleSender().sendMessage(plugin.getServerUtil().colorize("&cOnly players can use the command!"));
+            Bukkit.getConsoleSender().sendMessage(PluginUtil.colorize("&cOnly players can use the command!"));
             return true;
         }
 
         Player player = (Player) commandSender;
 
-        if (plugin.getBedWarsAPI().getArenaUtil().isPlaying(player) || plugin.getBedWarsAPI().getArenaUtil().isSpectating(player)) {
+        if (plugin.getBedWarsIntegration().get().getArenaUtil().isPlaying(player) || plugin.getBedWarsIntegration().get().getArenaUtil().isSpectating(player)) {
             player.sendMessage(Language.getMsg(player, Messages.COMMAND_NOT_ALLOWED_IN_GAME));
             return true;
         }
@@ -46,10 +47,10 @@ public class StreakCommand extends SubCommand {
         IUser user = plugin.getAPI().getUserUtil().getUser(player.getUniqueId());
 
         if (args.length > 0 && "-best".equals(args[0])) {
-            plugin.getServerUtil().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
+            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
                     .replace("{BEST_STREAK}", String.valueOf(user.getBestStreak())));
         } else {
-            plugin.getServerUtil().send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
+            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-streak")
                     .replace("{STREAK}", String.valueOf(user.getStreak())));
         }
 

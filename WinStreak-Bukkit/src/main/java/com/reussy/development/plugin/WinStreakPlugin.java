@@ -73,7 +73,7 @@ public class WinStreakPlugin extends JavaPlugin {
     public void debug(String message) {
 
         if (getFilesManager().getPluginConfig().getBoolean("general.debug")) {
-            Bukkit.getLogger().info("[BW1058-WinStreak DEBUG]: " + message);
+            this.getLogger().info("[BW1058-WinStreak DEBUG]: " + message);
         }
     }
 

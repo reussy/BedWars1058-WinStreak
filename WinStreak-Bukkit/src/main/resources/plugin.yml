@@ -1,7 +1,7 @@
-name: BedWars1058-WinStreak
+name: "BedWars1058-WinStreak"
 version: @version@
 main: com.reussy.development.plugin.WinStreakPlugin
-author: "Exodus Studios"
+author: "reussy"
 website: "https://reussy.me"
 api-version: 1.13
 description: Win Streak system for BedWars players!

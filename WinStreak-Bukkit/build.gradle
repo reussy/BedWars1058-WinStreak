@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'com.reussy.development'
-version '2.0.1'
+version '2.0.1-BETA'
 
 repositories {
     mavenCentral()

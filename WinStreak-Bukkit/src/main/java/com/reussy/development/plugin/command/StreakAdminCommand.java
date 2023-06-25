@@ -150,8 +150,9 @@ public class StreakAdminCommand extends BukkitCommand {
                     if (args.length == 3) {
 
                         if (user.getStreak() - Integer.parseInt(args[2]) < 0) {
-                            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
-                                    .replace("{NUMBER}", args[2]));
+                            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-enough-streak")
+                                    .replace("{PLAYER}", target.getName())
+                                    .replace("{WIN_STREAK}", String.valueOf(user.getStreak())));
                             return;
                         }
 
@@ -159,8 +160,9 @@ public class StreakAdminCommand extends BukkitCommand {
                     } else if (args[3] != null && ("-best".equals(args[3]) || "-b".equals(args[3]))) {
 
                         if (user.getBestStreak() - Integer.parseInt(args[2]) < 0) {
-                            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
-                                    .replace("{NUMBER}", args[2]));
+                            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-enough-streak")
+                                    .replace("{PLAYER}", target.getName())
+                                    .replace("{WIN_STREAK}", String.valueOf(user.getBestStreak())));
                             return;
                         }
 

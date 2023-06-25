@@ -32,7 +32,7 @@ public class StreakCommandProxy extends BukkitCommand {
 
         IUser user = plugin.getAPI().getUserUtil().getUser(player.getUniqueId());
 
-        if (args.length > 0 && "-best".equals(args[0])) {
+        if (args.length > 0 && ("-best".equals(args[0]) || "-b".equals(args[0]))) {
             PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.player-best-streak")
                     .replace("{BEST_STREAK}", String.valueOf(user.getBestStreak())));
         } else {

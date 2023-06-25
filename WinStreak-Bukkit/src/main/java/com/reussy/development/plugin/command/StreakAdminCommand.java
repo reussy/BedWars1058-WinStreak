@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class StreakAdminCommand extends BukkitCommand {
 
@@ -60,119 +61,22 @@ public class StreakAdminCommand extends BukkitCommand {
         switch (args[0].toLowerCase()) {
 
             case "add": {
-
-                if (args.length > 4) {
-                    sendHelpMessage(player);
-                    Bukkit.broadcastMessage("Arg 1: " + args[1] + " Arg 2: " + args[2] + " Arg 3: " + args[3]);
-                    return true;
-                }
-
-                try {
-
-                    if (Integer.parseInt(args[2]) < 0) {
-                        PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
-                                .replace("{NUMBER}", args[2]));
-                        return true;
-                    }
-
-                    if (!args[3].isEmpty()){
-                        if (args[3].equalsIgnoreCase("-best")){
-                            user.setBestStreak(user.getBestStreak() + Integer.parseInt(args[2]));
-                            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-added")
-                                    .replace("{PLAYER}", target.getName())
-                                    .replace("{AMOUNT}", args[2])
-                                    .replace("{WIN_STREAK}", String.valueOf(user.getBestStreak())));
-                            return true;
-                        }
-                    } else {
-                        user.setStreak(user.getStreak() + Integer.parseInt(args[2]));
-                        PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-added")
-                                .replace("{PLAYER}", target.getName())
-                                .replace("{AMOUNT}", args[2])
-                                .replace("{WIN_STREAK}", String.valueOf(user.getStreak())));
-
-                        if (user.getStreak() > user.getBestStreak()) {
-                            user.setBestStreak(user.getStreak());
-                        }
-                    }
-                } catch (NumberFormatException e) {
-                    PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
-                            .replace("{NUMBER}", args[2]));
-                }
-
+                update("add", args, player, user, target);
                 return true;
             }
 
             case "remove": {
-
-                if (args.length < 3) {
-                    sendHelpMessage(player);
-                    return true;
-                }
-
-                try {
-
-                    if (Integer.parseInt(args[2]) < 0) {
-                        PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
-                                .replace("{NUMBER}", args[2]));
-                        return true;
-                    }
-
-                    if (user.getStreak() < Integer.parseInt(args[2]) && Integer.parseInt(args[2]) != 0) {
-                        PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-enough-streak")
-                                .replace("{PLAYER}", target.getName())
-                                .replace("{WIN_STREAK}", String.valueOf(user.getStreak())));
-
-                        return false;
-                    }
-
-                    user.setStreak(user.getStreak() - Integer.parseInt(args[2]));
-                    PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-removed")
-                            .replace("{PLAYER}", target.getName())
-                            .replace("{AMOUNT}", args[2])
-                            .replace("{WIN_STREAK}", String.valueOf(user.getStreak())));
-                } catch (NumberFormatException e) {
-                    PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
-                            .replace("{NUMBER}", args[2]));
-                }
+                update("remove", args, player, user, target);
                 return true;
             }
 
             case "set": {
-
-                if (args.length < 3) {
-                    sendHelpMessage(player);
-                    return true;
-                }
-
-                try {
-
-                    if (Integer.parseInt(args[2]) < 0) {
-                        PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
-                                .replace("{NUMBER}", args[2]));
-                        return true;
-                    }
-
-                    user.setStreak(Integer.parseInt(args[2]));
-                    PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-set")
-                            .replace("{PLAYER}", target.getName())
-                            .replace("{WIN_STREAK}", String.valueOf(user.getStreak())));
-
-                    if (user.getStreak() > user.getBestStreak())
-                        user.setBestStreak(user.getStreak());
-                } catch (NumberFormatException e) {
-                    PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
-                            .replace("{NUMBER}", args[2]));
-                }
-
+                update("set", args, player, user, target);
                 return true;
             }
 
             case "reset": {
-
-                user.setStreak(0);
-                PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-reset")
-                        .replace("{PLAYER}", target.getName()));
+                update("reset", args, player, user, target);
                 return true;
             }
 
@@ -196,5 +100,100 @@ public class StreakAdminCommand extends BukkitCommand {
         player.spigot().sendMessage(textComponentBuilder(" &6▪ &7/ws remove <player> <amount> -best &8- &eRemove streak to a player", "/ws remove", "Remove streak to a player"));
         player.spigot().sendMessage(textComponentBuilder(" &6▪ &7/ws set <player> <amount> -best &8- &eSet streak to a player", "/ws set", "Set streak to a player"));
         player.spigot().sendMessage(textComponentBuilder(" &6▪ &7/ws reset <player> -best &8- &eReset streak to a player", "/ws reset", "Reset streak to a player"));
+    }
+
+    private void update(String type, String @NotNull [] args, Player player, @NotNull IUser user, @NotNull Player target){
+
+        if (args.length > 4) {
+            sendHelpMessage(player);
+            return;
+        }
+
+        if ("reset".equalsIgnoreCase(type)){
+            if (args.length == 2) {
+                user.setStreak(0);
+            } else if (args[2] != null && ("-best".equals(args[2]) || "-b".equals(args[2]))) {
+                user.setBestStreak(0);
+            }
+            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-reset")
+                    .replace("{PLAYER}", target.getName()));
+            return;
+        }
+
+        if (Integer.parseInt(args[2]) < 0) {
+            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
+                    .replace("{NUMBER}", args[2]));
+            return;
+        }
+
+        try {
+            switch (type){
+                case "add" : {
+                    if (args.length == 3) {
+                        user.setStreak(user.getStreak() + Integer.parseInt(args[2]));
+
+                        if (user.getStreak() > user.getBestStreak()) {
+                            user.setBestStreak(user.getStreak());
+                        }
+                    } else if (args[3] != null && ("-best".equals(args[3]) || "-b".equals(args[3]))) {
+                        user.setBestStreak(user.getBestStreak() + Integer.parseInt(args[2]));
+                    }
+                    PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-added")
+                            .replace("{PLAYER}", target.getName())
+                            .replace("{AMOUNT}", args[2])
+                            .replace("{WIN_STREAK}", String.valueOf(user.getBestStreak())));
+                }
+                break;
+
+                case "remove" : {
+
+                    if (args.length == 3) {
+
+                        if (user.getStreak() - Integer.parseInt(args[2]) < 0) {
+                            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
+                                    .replace("{NUMBER}", args[2]));
+                            return;
+                        }
+
+                        user.setStreak(user.getStreak() - Integer.parseInt(args[2]));
+                    } else if (args[3] != null && ("-best".equals(args[3]) || "-b".equals(args[3]))) {
+
+                        if (user.getBestStreak() - Integer.parseInt(args[2]) < 0) {
+                            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
+                                    .replace("{NUMBER}", args[2]));
+                            return;
+                        }
+
+                        user.setBestStreak(user.getBestStreak() - Integer.parseInt(args[2]));
+                    }
+                    PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-removed")
+                            .replace("{PLAYER}", target.getName())
+                            .replace("{AMOUNT}", args[2])
+                            .replace("{WIN_STREAK}", String.valueOf(user.getStreak())));
+                    break;
+                }
+
+                case "set" : {
+
+                    if (args.length == 3) {
+                        user.setStreak(Integer.parseInt(args[2]));
+
+                        if (user.getStreak() > user.getBestStreak())
+                            user.setBestStreak(user.getStreak());
+                    } else if (args[3] != null && ("-best".equals(args[3]) || "-b".equals(args[3]))) {
+                        user.setBestStreak(Integer.parseInt(args[2]));
+                    }
+
+                    user.setStreak(Integer.parseInt(args[2]));
+                    PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.successfully-set")
+                            .replace("{PLAYER}", target.getName())
+                            .replace("{WIN_STREAK}", String.valueOf(user.getStreak())));
+                    break;
+                }
+            }
+        } catch (NumberFormatException e) {
+            PluginUtil.send(player, plugin.getFilesManager().getPlayerLanguage(player).getString("addons.win-streak.not-valid-number")
+                    .replace("{NUMBER}", args[2]));
+        }
     }
 }

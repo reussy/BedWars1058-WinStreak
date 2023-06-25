@@ -2,6 +2,7 @@ package com.reussy.development.plugin;
 
 import com.andrei1058.bedwars.api.server.ServerType;
 import com.reussy.development.api.WinStreakAPI;
+import com.reussy.development.api.user.IUser;
 import com.reussy.development.plugin.command.StreakAdminCommand;
 import com.reussy.development.plugin.command.StreakCommand;
 import com.reussy.development.plugin.command.StreakCommandProxy;
@@ -85,6 +86,12 @@ public class WinStreakPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
+        Bukkit.getOnlinePlayers().forEach(player ->{
+            IUser user = getAPI().getUserUtil().getUser(player.getUniqueId());
+            getDatabaseManager().saveUser(user);
+        });
+
         this.getDatabaseManager().close();
     }
 

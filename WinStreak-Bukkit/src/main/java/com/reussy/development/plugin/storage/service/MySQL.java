@@ -50,6 +50,7 @@ public class MySQL implements IStorage {
     private void initConnection() {
         HikariConfig hikariConfig = new HikariConfig();
 
+        hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
         hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
         hikariConfig.setPoolName("WinStreak-MySQLPool");
         hikariConfig.setMaximumPoolSize(poolSize);

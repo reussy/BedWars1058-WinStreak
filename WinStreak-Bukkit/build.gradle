@@ -25,6 +25,7 @@ dependencies {
     implementation 'com.zaxxer:HikariCP:5.0.1'
     implementation 'org.slf4j:slf4j-simple:2.0.0'
     implementation 'org.jetbrains:annotations:23.0.0'
+    implementation 'mysql:mysql-connector-java:8.0.29'
     implementation(project(':WinStreak-API'))
 
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
@@ -36,10 +37,10 @@ shadowJar {
     final String archiveName = parent.name + " " + project.property("version") + '.jar'
     getArchiveFileName().set(archiveName)
     archiveClassifier.set('')
+    relocate "com.mysql", "com.reussy.development.libs.mysql"
     relocate "org.jetbrains", "com.reussy.development.libs.annotations"
     relocate "org.slf4j", "com.reussy.development.libs.slf4j"
     relocate "com.zaxxer.hikari", "com.reussy.development.libs.hikari"
-    minimize()
 }
 
 processResources {
